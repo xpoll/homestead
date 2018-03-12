@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blmdz.home.dao.TalkForwardDao">
+	<resultMap id="BaseResultMap" type="cn.blmdz.home.model.TalkForward">
+		<id column="id" property="id" />
+        
+        <result column="btalk_id" property="btalkId" />
+        <result column="talk_id" property="talkId" />
+        
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="cloums_all">
+		id, <include refid="cloums" />
+	</sql>
+
+	<sql id="cloums">
+		btalk_id, talk_id, status, create_time, update_time
+	</sql>
+
+	<sql id="vals_all">
+		#{id}, <include refid="vals" />
+	</sql>
+
+	<sql id="vals">
+		#{btalkId}, #{talkId}, true, #{createTime}, #{updateTime}
+	</sql>
+
+	<sql id="tb">
+		tb_talk_forward
+	</sql>
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="cn.blmdz.home.model.TalkForward">
+		insert into
+		<include refid="tb" />
+		(<include refid="cloums" />)
+		values
+		(<include refid="vals" />)
+	</insert>
+
+	<delete id="delete" parameterType="long">
+		delete from
+		<include refid="tb" />
+		where id = #{id}
+	</delete>
+
+    <delete id="tombstone" parameterType="long">
+        update
+        <include refid="tb" />
+        <set>
+            status = false
+        </set>
+        where id = #{id}
+    </delete>
+
+	<update id="update" parameterType="cn.blmdz.home.model.TalkForward">
+		update
+	    <include refid="tb"/>
+		<set>
+          	update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findById" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+		where id = #{id}
+	</select>
+
+	<select id="list" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+    <select id="page" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+    </select>
+
+    <select id="findUpperNode" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where status = true
+        and btalk_id = #{id}
+        order by id desc
+    </select>
+
+    <select id="findUnderNode" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where status = true
+        and talk_id = #{id}
+        order by id desc
+    </select>
+
+    <select id="pageBySelect" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where status = true
+        and btalk_id = #{upperId}
+        order by id desc
+    </select>
+
+    <select id="countUpperNode" resultType="java.lang.Integer">
+        select count(1)
+        from <include refid="tb" />
+        where status = true
+        and btalk_id = #{id}
+    </select>
+
+    <select id="countUnderNode" resultType="java.lang.Integer">
+        select count(1)
+        from <include refid="tb" />
+        where status = true
+        and talk_id = #{id}
+    </select>
+</mapper>

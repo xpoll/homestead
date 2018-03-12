@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blmdz.home.dao.UserExtraDao">
+	<resultMap id="BaseResultMap" type="cn.blmdz.home.model.UserExtra">
+		<id column="id" property="id" />
+        
+		<result column="user_id" property="userId" />
+		<result column="school" property="school" />
+		<result column="birthday" property="birthday" />
+		<result column="city" property="city" />
+		<result column="constellation" property="constellation" />
+		<result column="description" property="description" />
+        
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="cloums_all">
+		id, <include refid="cloums" />
+	</sql>
+
+	<sql id="cloums">
+		user_id, school, birthday, city, constellation, description, status, create_time, update_time
+	</sql>
+
+	<sql id="vals_all">
+		#{id}, <include refid="vals" />
+	</sql>
+
+	<sql id="vals">
+		#{userId}, #{school}, #{birthday}, #{city}, #{constellation}, #{description}, true, now(), now()
+	</sql>
+
+	<sql id="tb">
+		tb_user_extra
+	</sql>
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="cn.blmdz.home.model.UserExtra">
+		insert into
+		<include refid="tb" />
+		(<include refid="cloums" />)
+		values
+		(<include refid="vals" />)
+	</insert>
+
+	<delete id="delete" parameterType="long">
+		delete from
+		<include refid="tb" />
+		where id = #{id}
+	</delete>
+
+    <delete id="tombstone" parameterType="long">
+        update
+        <include refid="tb" />
+        <set>
+            status = false
+        </set>
+        where id = #{id}
+    </delete>
+
+	<update id="update" parameterType="cn.blmdz.home.model.UserExtra">
+		update
+	    <include refid="tb"/>
+		<set>
+			<if test="school != null">school = #{school},</if>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="city != null">city = #{city},</if>
+			<if test="constellation != null">constellation = #{constellation},</if>
+			<if test="description != null">description = #{description},</if>
+          	update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findById" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+		where id = #{id}
+	</select>
+
+	<select id="list" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+	<select id="page" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+    <select id="findByUserId" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where user_id = #{userId}
+    </select>
+    
+</mapper>

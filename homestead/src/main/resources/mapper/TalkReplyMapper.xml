@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blmdz.home.dao.TalkReplyDao">
+	<resultMap id="BaseResultMap" type="cn.blmdz.home.model.TalkReply">
+		<id column="id" property="id" />
+        
+        <result column="user_id" property="userId" />
+        <result column="talk_id" property="talkId" />
+        <result column="talk_owner_id" property="talkOwnerId" />
+        <result column="super_id" property="superId" />
+        <result column="reply_to_id" property="replyToId" />
+        <result column="content" property="content" />
+        
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="cloums_all">
+		id, <include refid="cloums" />
+	</sql>
+
+	<sql id="cloums">
+		user_id, talk_id, talk_owner_id, super_id, reply_to_id, content, status, create_time, update_time
+	</sql>
+
+	<sql id="vals_all">
+		#{id}, <include refid="vals" />
+	</sql>
+
+	<sql id="vals">
+		#{userId}, #{talkId}, #{talkOwnerId}, #{superId}, #{replyToId}, #{content}, true, now(), now()
+	</sql>
+
+	<sql id="tb">
+		tb_talk_reply
+	</sql>
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="cn.blmdz.home.model.TalkReply">
+		insert into
+		<include refid="tb" />
+		(<include refid="cloums" />)
+		values
+		(<include refid="vals" />)
+	</insert>
+
+	<delete id="delete" parameterType="long">
+		delete from
+		<include refid="tb" />
+		where id = #{id}
+	</delete>
+
+    <delete id="tombstone" parameterType="long">
+        update
+        <include refid="tb" />
+        <set>
+            status = false
+        </set>
+        where id = #{id}
+    </delete>
+
+	<update id="update" parameterType="cn.blmdz.home.model.TalkReply">
+		update
+	    <include refid="tb"/>
+		<set>
+          	update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findById" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+		where id = #{id}
+	</select>
+
+	<select id="list" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+    <select id="page" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+    </select>
+
+    <select id="countTalkReply" resultType="java.lang.Integer">
+        select count(1)
+        from <include refid="tb" />
+        where status = true
+        and super_id is null
+        and talk_id = #{talkId}
+    </select>
+
+    <select id="listBySelect" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where status = true
+        and talk_id = #{talkId}
+        order by id desc
+    </select>
+</mapper>

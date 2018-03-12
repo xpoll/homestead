@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blmdz.home.dao.TalkDao">
+	<resultMap id="BaseResultMap" type="cn.blmdz.home.model.Talk">
+		<id column="id" property="id" />
+        
+        <result column="user_id" property="userId" />
+        <result column="original" property="original" />
+        <result column="talk_id" property="talkId" />
+        <result column="privacy" property="privacy" />
+        <result column="content" property="content" />
+        
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="cloums_all">
+		id, <include refid="cloums" />
+	</sql>
+
+	<sql id="cloums">
+		user_id, original, talk_id, privacy, content, status, create_time, update_time
+	</sql>
+
+	<sql id="vals_all">
+		#{id}, <include refid="vals" />
+	</sql>
+
+	<sql id="vals">
+		#{userId}, #{original}, #{talkId}, #{privacy}, #{content}, true, now(), now()
+	</sql>
+
+	<sql id="tb">
+		tb_talk
+	</sql>
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="cn.blmdz.home.model.Talk">
+		insert into
+		<include refid="tb" />
+		(<include refid="cloums" />)
+		values
+		(<include refid="vals" />)
+	</insert>
+
+	<delete id="delete" parameterType="long">
+		delete from
+		<include refid="tb" />
+		where id = #{id}
+	</delete>
+
+    <delete id="tombstone" parameterType="long">
+        update
+        <include refid="tb" />
+        <set>
+            status = false
+        </set>
+        where id = #{id}
+    </delete>
+
+	<update id="update" parameterType="cn.blmdz.home.model.Talk">
+		update
+	    <include refid="tb"/>
+		<set>
+            <if test="privacy != null">privacy = #{privacy},</if>
+          	update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findById" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+		where id = #{id}
+	</select>
+
+	<select id="list" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+    <select id="page" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+    </select>
+
+    <select id="findFirstTalkByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        <where>
+            <if test="privacy == 0">and privacy = 0</if>
+            <if test="privacy == 1">and privacy != 2</if>
+            and status = true
+            and user_id = #{userId}
+        </where>
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="pageBySelect" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        <where>
+            <if test="privacy == 0">and privacy = 0</if>
+            <if test="privacy == 1">and privacy != 2</if>
+            and status = true
+            and user_id = #{userId}
+        </where>
+        order by id desc
+    </select>
+</mapper>

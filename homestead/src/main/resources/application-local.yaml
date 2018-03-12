@@ -1,0 +1,69 @@
+##################
+### jsp set
+##################
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://mysql.blmdz.cn:3306/bdm302248518_db?autoReconnect=true&amp;useUnicode=true&amp;charaterEncoding=utf-8
+    username: bdm302248518
+    password: bdm302248518
+  http:
+    multipart:
+      maxFileSize: 2Mb
+      maxRequestSize: 20Mb
+  
+##################
+### log set
+##################
+logging:
+  file: /var/log/spring-boot.log
+  level.*: INFO
+  level.cn.blmdz: DEBUG
+  
+##################
+### server set
+##################
+server:
+  context-path: /
+  port: 8083
+  session:
+    timeout: 1800
+    
+##################
+### mybatis set
+##################
+mybatis:
+  mapperLocations: classpath*:mapper/*Mapper.xml
+  typeAliasesPackage: cn.blmdz.home.model
+  
+##################
+### other set
+##################
+other:
+  devMode: true
+  oos:
+    endpoint: http://oss-cn-shanghai.aliyuncs.com
+    accessKey: LTAIOucdAfA5jDC1
+    accessSecret: 3Cx6UXWh1bb8wnYK2D1hti7jYhYHeX
+    bucketName: xpoll
+  third:
+    domain: http://blmdz.cn
+    alipay:
+      app_id: 2017052207312023
+      private_key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDJ2MjgHTjFQ/vH9E8baV51cxOa1Mh7dyum26PRgxkG0ofyMYbQRjGQRA1NtCOJoYsj3/QUgR/XCOxG2O+zc/6PlJnuI82cJ7dUU8SARFcjri4AZfrO/aPSoBzLqVkJtzi3mK2SN01hJgL+icms9FEY5yCvt08apLlhUTizf3e4mFxGrOrnSAm4Q2KkhnsH/XA4YTN6sYrWDllAFK+JB2Fcikhno4av2KLEJ6/cOUr4QmRjwBVlXyyWNb9wNWk53GNIFh2NeUzuG6a4/C/xfqukAS2A0Rck2KIFahl1mOTuTBijTMSN4OUySl2rzPNZVVlkLoiQIVL1321aGl10Zzh1AgMBAAECggEAQRmDCA1ErxLTFNVt4ihkx7qauxgfpPp1gLZcKol+u92Q7QMeOPQ6rg3UwJf10kDg0Gw9m5NdwovlMKBtBtLFameCEfVILjH9BdyShtADzsUxnv1FHBdgC+GKCAGRbvnB+Czs5jih41BQLOohun993GtG9oVHpQ81nvaENBhLc6RVVzPoX2oGX0RRGeXBWU/FEdTRsVgoxGdOWhrH2zOh4yOVM5dpiTTFnB9o5Uv7JXT1xQwnbfVCBOCDUnznUwtxPIdpJYMY3wRZQy6eXoYy3qgrYuCSQBgUNUjLuGQ69E3+mdQTmPHHLEPOKItFgHJckM5b0CTOv+B/GRYayF7coQKBgQDwwfAlcZzfcKJFvaC0yVmvNYQKsWlLgC6oLCx+xK/BTk0rzytPWy3hPl+Wy2Q4vNZJZEWZl73Ontqw4yYJEKkPhWtvF+L1WC3KbG2Z/dDq5mii8xNEt+zDgVXr2oouW9c+7vKyjRyrmw+aSvxEp488jI9HezS8NETNEl4rjifwWQKBgQDWoDQDigLUnKS60hqaA0eqdue57ZUCLYeVclBySkoF4SRdJcdZ1Cw6ztypt21OlAdJcgFgFCi/0CgTyHz/roCIy/8v5T1qRbM82F+Gqlx0uxab4nYxd9qhhKj93CtXKeL+QlBvwfCWfDJv/6bcaBCuy6UPayysBAUx9kJFOTolfQKBgHOvjPhBDnMjSSYfx0/3jHuvSGJm+0SHNGQkzcCgPB+zw0swwgvgsTwRX5cy5laJDqK3ZuY1zsOw+z6R913VvpaxsnzwSmM/2sjwrv2Ww8OLsW3TRUf45PDQffvVyB4cjWI1KTN4sPUYjjfCnlNS/HXIyLQ9VIq2xvSPRebB6RkJAoGBAKyCxmwV0WKdqda0LEeg3UjKHEYZDg1bFUDtSnYi+k6xga4RQKQWY5q9TSZpVkWzvAuvxCU67uoGYUBNhRNqaswJ1ErmIrA55/C/JkEyy+/TtT+FDmWCpcvvunmaL4f3FgoyuT6rDzuWBmB5h+BfERG+hCTZi2WUMazP+MJ1ViRtAoGBAISlFTpx9VFxk6CHW5DXWYPgDZcyFdDPoJhOhIPdhXMLuq6P/JzRRC+FI7X8LO7bx/megevh6JBKhOPcooTEghQgmUDw3YoEIet6lZ3lO3FX6qJgQM4B3PfZShqGYS33ulIfDi3vCHUy2cJ+yfM7Y1E3Tte0G8kZt/VeLmhlvSko
+      public_key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhmoXHgvWRO/Xmz2rHuWBik9gzS1GGLw2tqkBP2TAObc094xF9tFA/CvUPCMy8PZATl3Sz9XnavjZtWEqihhqtp8lj1JhabsyL3gv/+NZ9i+5YIhuG+z0ZX324s0wynp7/RMO6Nta1IllMC/8KpJOLMVsXUvggLawfJuzZstqc5MqI7qEaTz0rlUcz60HvlKEPBbzXPN+no8Z3TMaxIACJ6JLGnxySbeqeOi7ZJj0SBGPPkMC7MMytMVgHQASZBbkh6IbOFOt2I+K6pfSvLKclFjY8GY74f6G5OArCqk11ls6K6iQqmYIUm8gVygiYLQLKXfXbRUX1ZEqse3/RQ0xzwIDAQAB
+      link_card: https://memberprod.alipay.com/account/openform/activecard.htm?app_id=2017052207312023&template_id=20171113000000000578231000300753&__webview_options__=canPullDown%3dNO%26transparentTitle%3dauto&out_string=alipay&callback=http://blmdz.cn/third/card
+    baidu:
+      app_id: 9823512
+      app_key: YQlsGnkZ6pGeeLmyv9FLoquF
+      app_secret: bkUUlqubxTGbx0emB89jtMj1PWen76j2
+      redirect_url: /third/baidu
+    sina:
+      app_key: 2385672810
+      app_secret: d0e3001da28ce22f9e09dfbcacb3d826
+      redirect_url:
+    wechat:
+      app_id: wx30c11aa9e8d71efc
+      app_secret: 2c705bffef34233a31390486c556e1b1
+      redirect_url: /third/wechat

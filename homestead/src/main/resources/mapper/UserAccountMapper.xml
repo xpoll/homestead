@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blmdz.home.dao.UserAccountDao">
+	<resultMap id="BaseResultMap" type="cn.blmdz.home.model.UserAccount">
+		<id column="id" property="id" />
+        
+        <result column="user_id" property="userId" />
+        <result column="gold" property="gold" />
+        <result column="diamond" property="diamond" />
+        
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="cloums_all">
+		id, <include refid="cloums" />
+	</sql>
+
+	<sql id="cloums">
+		user_id, gold, diamond, status, create_time, update_time
+	</sql>
+
+	<sql id="vals_all">
+		#{id}, <include refid="vals" />
+	</sql>
+
+	<sql id="vals">
+		#{userId}, #{gold}, #{diamond}, true, now(), now()
+	</sql>
+
+	<sql id="tb">
+		tb_user_account
+	</sql>
+
+	<insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="cn.blmdz.home.model.UserAccount">
+		insert into
+		<include refid="tb" />
+		(<include refid="cloums" />)
+		values
+		(<include refid="vals" />)
+	</insert>
+
+	<delete id="delete" parameterType="long">
+		delete from
+		<include refid="tb" />
+		where id = #{id}
+	</delete>
+
+    <delete id="tombstone" parameterType="long">
+        update
+        <include refid="tb" />
+        <set>
+            status = false
+        </set>
+        where id = #{id}
+    </delete>
+
+	<update id="update" parameterType="cn.blmdz.home.model.UserAccount">
+		update
+	    <include refid="tb"/>
+		<set>
+			<if test="gold != null">gold = #{gold},</if>
+			<if test="diamond != null">diamond = #{diamond},</if>
+          	update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findById" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+		where id = #{id}
+	</select>
+
+	<select id="list" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+	<select id="page" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+    <select id="findByUserId" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where user_id = #{userId}
+    </select>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.blmdz.home.dao.BaseDataDao">
+	<resultMap id="BaseResultMap" type="cn.blmdz.home.model.BaseData">
+		<id column="id" property="id" />
+        
+        <result column="type" property="type" />
+        <result column="data_json" property="dataJson" />
+        
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<sql id="cloums_all">
+		id, <include refid="cloums" />
+	</sql>
+
+	<sql id="cloums">
+		type, data_json, create_time, update_time
+	</sql>
+
+	<sql id="tb">
+		tb_base_data
+	</sql>
+
+	<update id="update" parameterType="cn.blmdz.home.model.BaseData">
+		update
+	    <include refid="tb"/>
+		<set>
+			<if test="type != null">type = #{type},</if>
+			<if test="dataJson != null">data_json = #{dataJson},</if>
+          	update_time = now()
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="list" resultMap="BaseResultMap">
+		select
+		<include refid="cloums_all" />
+		from <include refid="tb" />
+	</select>
+
+    <select id="findByType" parameterType="Integer" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where type = #{type}
+    </select>
+</mapper>
