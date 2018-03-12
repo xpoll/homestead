@@ -6,8 +6,12 @@
       <p>牵起的那一刻，便注定了永远！</p>
     </section>
 
-    <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
-
+    <el-button type="text" @click="dialogVisible=true">点击打开 Dialog</el-button>
+    <!-- 发布 -->
+    <!-- 转发 -->
+    <!-- 回复 -->
+    <!-- 评论 -->
+    <!-- 赞   -->
     <el-dialog
       title=""
       :visible.sync="dialogVisible"
@@ -20,7 +24,7 @@
     <section class="head">
       <img src="" width="120" height="120">
       <div class="content">
-        <span>.             "Tomorrow</span>
+        <span v-if="user">{{user.nick}}</span>
         <div>其他</div>
         <div class="util">
           <el-tabs tab-position="top" value="a">
@@ -254,21 +258,34 @@
     data() {
       return {
         talks: [],
-        dialogVisible: false
+        dialogVisible: false,
+        user: null
       }
     },
     created() {
-      this.refresh()
+      var v = this
+      v.$axios.get(v.$domain + '/api/user')
+      .then(r => {
+        if (!r.data.success) {
+          v.$router.push({ path: '/login' })
+        } else {
+          v.user = r.data.data
+          this.refresh()
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
     },
     methods: {
       refresh(e) {
         var v = this
         var page = new Object()
         var search = new Object()
-        search.userId = 8
+        search.userId = v.user.id
         page.mode = search
-        page.size = 6
-        page.num = 3
+        page.size = 10
+        page.num = 1
         v.$axios.post(v.$domain + '/api/talk/page', page)
         .then(r => {
           if (r.data.success) {

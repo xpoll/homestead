@@ -26,7 +26,7 @@ logging:
 ##################
 server:
   context-path: /
-  port: 8083
+  port: 8082
   session:
     timeout: 1800
     
