@@ -27,8 +27,8 @@ axios.defaults.withCredentials=true
 Vue.use(VueRouter)
 Vue.prototype.$axios = axios
 Vue.prototype.$util = util
-// Vue.prototype.$domain = 'http://127.0.0.1:8082'
-Vue.prototype.$domain = 'http://blmdz.cn'
+Vue.prototype.$domain = 'http://127.0.0.1:8082'
+// Vue.prototype.$domain = 'http://blmdz.cn'
 // Vue.prototype.$domain = ''
 
 const router = new VueRouter({

@@ -10,8 +10,8 @@ import java.text.SimpleDateFormat;
 public class Constants {
 	
 	//############################  [配置]  ###################################
-	public final static String ERRORS = "/error/page";
-	public final static String PAGE_NOT_FOUND = "/error/404";
+	public final static String ERRORS = "";
+	public final static String PAGE_NOT_FOUND = "/index.html";
 
 	//############################  [时间]  ###################################
 	public final static String TIMEZONE = "GMT+08:00";

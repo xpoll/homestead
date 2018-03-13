@@ -26,7 +26,7 @@ public class Error404Interceptor implements HandlerInterceptor {
 			throws Exception {
         if (debugger) {
             //response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:8088"); // cookie信息携带必须设置来源
+            response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:8088"); // cookie信息携带必须设置来源 或者Headers为*
             response.setHeader("Access-Control-Allow-Credentials", "true"); // 携带cookie信息
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
             response.setHeader("Access-Control-Max-Age", "3600");
