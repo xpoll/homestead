@@ -30,6 +30,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("接入SOCKET");
         BaseUser user = getUser(session);
         if (user == null) return;
         
@@ -41,6 +42,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        System.out.println("发送消息");
         BaseUser user = getUser(session);
         if (user == null) return;
         
@@ -52,6 +54,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus cs) throws Exception {
+        System.out.println("链接关闭");
         BaseUser user = getUser(session);
         if (user == null) return;
 
@@ -63,6 +66,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable thrwbl) throws Exception {
+        System.out.println("链接错误");
         if (session.isOpen()) session.close();
         BaseUser user = getUser(session);
         if (user == null) return;
@@ -72,6 +76,7 @@ public class SocketJsHelper implements WebSocketHandler {
 
     @Override
     public boolean supportsPartialMessages() {
+        System.out.println("supportsPartialMessages");
         return false;
     }
     

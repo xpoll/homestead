@@ -14,6 +14,7 @@ public enum ThirdChannel {
 	BAIDU("baidu", "百度", 6),
 	WECHAT("wechat", "微信", 7),
 	QQ("qq", "QQ", 8),
+//    WECHAT_APPLET("wechat_applet", "微信小程序", 7),
 	;
 	
 	String code;

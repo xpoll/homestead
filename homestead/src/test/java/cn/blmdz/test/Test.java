@@ -14,5 +14,5 @@ public class Test<T> {
 	}
 }
 class B {
-	
+
 }

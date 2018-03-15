@@ -33,6 +33,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(socketJsHelper, "/endpoint/deal").setAllowedOrigins("*").withSockJS().setInterceptors(new WebSocketInterceptor());
+        registry.addHandler(socketJsHelper, "/endpoint/deal/applet").setAllowedOrigins("*").addInterceptors(new WebSocketInterceptor());
     }
 
     

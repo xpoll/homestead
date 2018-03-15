@@ -1,7 +1,9 @@
 package cn.blmdz.home.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,10 +39,20 @@ public class GlobalExceptionHandler {
 			log.debug("MethodArgumentNotValidException: {}", ex.getBindingResult().getFieldError().getDefaultMessage());
 			return Response.build(null).message(ex.getBindingResult().getFieldError().getDefaultMessage());
 		} else if (e instanceof MultipartException) {
-		    
+            
             log.debug("MultipartException: {}",  e.getMessage());
             return Response.build(null).message(e.getMessage());
-		}
+        } else if (e instanceof MissingServletRequestParameterException) {
+            
+            log.debug("MissingServletRequestParameterException: {}",  e.getMessage());
+            return Response.build(null).orNull(EnumsError.ERROR_999997);
+        } else if (e instanceof HttpRequestMethodNotSupportedException) {
+            
+            log.debug("HttpRequestMethodNotSupportedException: {}",  e.getMessage());
+            return Response.build(null).orNull(EnumsError.ERROR_999996);
+        }
+		
+		
 		
 		log.debug("Exception");
 		e.printStackTrace();

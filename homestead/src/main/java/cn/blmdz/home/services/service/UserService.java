@@ -17,13 +17,9 @@ public interface UserService {
 	 */
 	BaseUser login(LoginValid login);
 	/**
-	 * 第三方注册
+	 * 第三方识别(登陆或注册)
 	 */
-	BaseUser registered();
-	/**
-	 * 第三方登陆
-	 */
-	BaseUser login();
+	BaseUser recognition(RegisterValid register);
 	
 	/**
 	 * 基本信息-用作展示

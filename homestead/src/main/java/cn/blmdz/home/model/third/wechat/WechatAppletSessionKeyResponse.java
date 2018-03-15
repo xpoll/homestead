@@ -5,10 +5,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class WechatUserTokenResponse extends WechatBaseResponse {
-    private String access_token;
+public class WechatAppletSessionKeyResponse extends WechatBaseResponse {
+    private String session_key;
     private Integer expires_in;
-    private String refresh_token;
     private String openid;
-    private String scope;
 }

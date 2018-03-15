@@ -23,4 +23,7 @@ public class RegisterValid {
     @JsonIgnore
     private ThirdChannel channel;
 
+    private String nick;//昵称
+    private String avatar;//头像
+    private Integer gender;//性别(0未知1男2女)
 }

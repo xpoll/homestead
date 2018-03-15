@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.base.MoreObjects;
+
 import cn.blmdz.home.base.BaseUser;
 import cn.blmdz.home.base.Constants;
 import cn.blmdz.home.dao.UserAccountDao;
@@ -14,6 +16,7 @@ import cn.blmdz.home.dao.UserDao;
 import cn.blmdz.home.dao.UserExtraDao;
 import cn.blmdz.home.dao.UserThirdDao;
 import cn.blmdz.home.enums.EnumsGender;
+import cn.blmdz.home.enums.third.ThirdChannel;
 import cn.blmdz.home.exception.WebJspException;
 import cn.blmdz.home.model.User;
 import cn.blmdz.home.model.UserAccount;
@@ -51,12 +54,12 @@ public class UserServiceImpl implements UserService {
 		if (userThird != null) throw new WebJspException("账号已存在");
 		
 		User user = new User();
-		user.setNick(register.getName());
-		user.setAvatar(avatar);
+		user.setNick(MoreObjects.firstNonNull(register.getNick(), register.getName()));
+		user.setAvatar(MoreObjects.firstNonNull(register.getAvatar(), avatar));
 		user.setVip(0);
 		user.setLevel(1);
 		user.setActiveDay(10);
-		user.setGender(EnumsGender.UNKNOWN.value());
+		user.setGender(MoreObjects.firstNonNull(register.getGender(), EnumsGender.UNKNOWN.value()));
 		user.setLoginTime(new Date());
 		user.setSignDate(new Date());
 		userDao.create(user);
@@ -71,7 +74,9 @@ public class UserServiceImpl implements UserService {
 		userThird.setUserId(user.getId());
 		userThird.setChannelId(register.getChannel().value());
 		userThird.setUsername(register.getName());
-		userThird.setPassword(EncryptUtil.encrypt(register.getPwd()));
+		if (register.getChannel().value() == ThirdChannel.COMMUNITY.value() || register.getChannel().value() == ThirdChannel.MOBILE.value() || register.getChannel().value() == ThirdChannel.EMAIL.value()) {
+		    userThird.setPassword(EncryptUtil.encrypt(register.getPwd()));
+		}
 		userThird.setExtraJson(Constants.DEFAULT_JSON);
 		userThirdDao.create(userThird);
 		
@@ -94,7 +99,6 @@ public class UserServiceImpl implements UserService {
 		UserThird userThird= userThirdDao.findByUsername(login.getChannel().value(), login.getName());
 		if (userThird == null) throw new WebJspException("用户不存在");
 		if (!EncryptUtil.match(login.getPwd(), userThird.getPassword())) throw new WebJspException("密码不正确");
-		// 冻结 密码错误等处理 TODO
 		User user = userDao.findById(userThird.getUserId());
 		BaseUser baseUser = new BaseUser();
 		BeanUtils.copyProperties(user, baseUser);
@@ -102,15 +106,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public BaseUser registered() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public BaseUser login() {
-		// TODO Auto-generated method stub
-		return null;
+	public BaseUser recognition(RegisterValid register) {
+	    UserThird userThird= userThirdDao.findByUsername(register.getChannel().value(), register.getName());
+	    if (userThird != null) {
+	        User user = userDao.findById(userThird.getUserId());
+	        BaseUser baseUser = new BaseUser();
+	        BeanUtils.copyProperties(user, baseUser);
+	        return baseUser;
+	    }
+		return registered(register);
 	}
 
     @Override
