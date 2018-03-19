@@ -4,7 +4,6 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,9 +29,12 @@ import cn.blmdz.home.model.valid.RegisterValid;
 import cn.blmdz.home.services.service.UserService;
 import cn.blmdz.home.util.AESUtil;
 import cn.blmdz.home.util.JsonMapper;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+/**
+ * 微信小程序用户识别
+ * @author yongzongyang
+ * @date 2018年3月19日
+ */
 @RestController
 @RequestMapping(value="/api/applet")
 public class RestWechatAppletsController {
@@ -44,6 +46,14 @@ public class RestWechatAppletsController {
     private EventBus eventBus;
     
 
+    /**
+     * 解析识别记录用户
+     * @param request
+     * @param code
+     * @param iv
+     * @param encryptedData
+     * @return
+     */
     @RequestMapping(value="auth", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public Response<BaseUser> auth(HttpServletRequest request, @RequestParam("code") String code, @RequestParam("iv") String iv, @RequestParam("encryptedData") String encryptedData) {
         
@@ -54,12 +64,20 @@ public class RestWechatAppletsController {
         if (reqSession.ok()) {
             WechatAppletSessionKeyResponse sessionResponse = JsonMapper.nonEmptyMapper().fromJson(reqSession.body(), WechatAppletSessionKeyResponse.class);
             user = decryptToUser(sessionResponse.getSession_key(), iv, encryptedData);
+            if (user == null) return Response.build(null);
             request.getSession().setAttribute("user", user);
             eventBus.post(new LoginEvent(user.getId()));
         }
         return Response.build(user);
     }
     
+    /**
+     * 封装识别
+     * @param key
+     * @param iv
+     * @param encryptedData
+     * @return
+     */
     private BaseUser decryptToUser(String key, String iv, String encryptedData) {
         WechatAppletUserInfoResponse response = decrypt(key, iv, encryptedData);
         if (response == null) return null;
@@ -72,6 +90,13 @@ public class RestWechatAppletsController {
         return userService.recognition(register);
     }
     
+    /**
+     * 用户数据解密
+     * @param key
+     * @param iv
+     * @param encryptedData
+     * @return
+     */
     private static WechatAppletUserInfoResponse decrypt(String key, String iv, String encryptedData) {
         try {
             String json = new String(AESUtil.instance.decrypt(decodeBase64(encryptedData), decodeBase64(key), decodeBase64(iv)), "UTF-8");

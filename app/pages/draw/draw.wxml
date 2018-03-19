@@ -1,0 +1,8 @@
+<!draw.wxml-->
+<view class="container">
+  <view class='one'>
+  draw
+  </view>
+  <canvas style="width: 400px; margin: 10px auto;" canvas-id="canvas"></canvas>
+  <input></input>
+</view>

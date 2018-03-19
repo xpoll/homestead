@@ -1,0 +1,4 @@
+.one {
+  border: 1pt salmon solid;
+  display: flex;
+}
