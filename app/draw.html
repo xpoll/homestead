@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>draw</title>
+  <style type="text/css">
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    .container {
+      display: flex;
+    }
+    .tools-left, .tools-right {
+      border: 1px solid red;
+      display: flex;
+      flex-direction: column;
+      height: 200px;
+      width: 30px;
+    }
+    .draw {
+      margin: 0 1px;
+      border: 1px solid red;
+      display: flex;
+      height: 200px;
+      width: 400px;
+    }
+    .tools-left div, .tools-right div {
+      height: 28px;
+      border: 1px solid #eee;
+      border-radius: 15px;
+      line-height: 28px;
+    }
+    .tools-left div:hover, .tools-right div:hover {
+      border: 1px solid #555;
+    }
+    .tools-left div:first-child, .tools-right div:first-child {
+      margin-top: 10px;
+    }
+    .left-one {background-color: #cb3594;}
+    .left-two {background-color: #659b41;}
+    .left-three {background-color: #ffcf33;}
+    .left-four {background-color: #986928;}
+    .left-five {background-color: #000000;}
+    .left-six {background-color: #ffffff;}
+
+    .tools-right div, .tools-left div:last-child {font-family: 幼圆;text-align: center;}
+    .right-one {font-size: 12px;}
+    .right-two {font-size: 14px;}
+    .right-three {font-size: 16px;}
+    .right-four {font-size: 18px;}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="tools-left">
+    <div class="left-one"></div>
+    <div class="left-two"></div>
+    <div class="left-three"></div>
+    <div class="left-four"></div>
+    <div class="left-five"></div>
+    <div class="left-six">清</div>
+  </div>
+  <div class="draw"></div>
+  <div class="tools-right">
+    <div class="right-one">1号</div>
+    <div class="right-two">2号</div>
+    <div class="right-three">3号</div>
+    <div class="right-four">4号</div>
+    <div class="right-five">笔</div>
+    <div class="right-six">檫</div>
+  </div>
+</div>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>
