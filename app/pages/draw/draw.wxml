@@ -1,20 +1,20 @@
 <!--draw.wxml-->
-<view class="container" onselectstart="return false;">
+<view class="draw-container" onselectstart="return false;">
   <view class="tools-left" id="tools-left">
-    <view bindtap="toolsChooseType(0, 0)" class="{{tools.left_0 ? 'tools-choose' : ''}} left-one"></view>
-    <view bindtap="toolsChooseType(0, 1)" class="{{tools.left_1 ? 'tools-choose' : ''}} left-two"></view>
-    <view bindtap="toolsChooseType(0, 2)" class="{{tools.left_2 ? 'tools-choose' : ''}} left-three"></view>
-    <view bindtap="toolsChooseType(0, 3)" class="{{tools.left_3 ? 'tools-choose' : ''}} left-four"></view>
-    <view bindtap="toolsChooseType(0, 4)" class="{{tools.left_4 ? 'tools-choose' : ''}} left-five"></view>
-    <view bindtap="toolsChooseType(3, 0)" class="{{tools.left_5 ? 'tools-choose' : ''}} left-six">清</view>
+    <view bindtap="toolsChooseType" data-type="0" data-value="0" class="{{tools.color[0] ? 'tools-choose' : ''}} left-one"></view>
+    <view bindtap="toolsChooseType" data-type="0" data-value="1" class="{{tools.color[1] ? 'tools-choose' : ''}} left-two"></view>
+    <view bindtap="toolsChooseType" data-type="0" data-value="2" class="{{tools.color[2] ? 'tools-choose' : ''}} left-three"></view>
+    <view bindtap="toolsChooseType" data-type="0" data-value="3" class="{{tools.color[3] ? 'tools-choose' : ''}} left-four"></view>
+    <view bindtap="toolsChooseType" data-type="0" data-value="4" class="{{tools.color[4] ? 'tools-choose' : ''}} left-five"></view>
+    <view bindtap="toolsChooseType" data-type="3" data-value="0" class="{{tools.abc ? 'tools-choose' : ''}} left-six">清</view>
   </view>
-  <canvas style="width: 300px; margin: 10px auto;" canvas-id="draw" class="draw"></canvas>
+  <canvas style="width: 300px;height: 200px; margin: 10px auto;" canvas-id="draw" class="draw" disable-scroll="true" bindtouchstart="bindtouchstart" bindtouchmove="bindtouchmove" bindtouchend="bindtouchend" bindtouchcancel="bindtouchcancel" ></canvas>
   <view class="tools-right" id="tools-right">
-    <view bindtap="toolsChooseType(1, 0)" class="{{tools.right_0 ? 'tools-choose' : ''}} right-one">1号</view>
-    <view bindtap="toolsChooseType(1, 1)" class="{{tools.right_1 ? 'tools-choose' : ''}} right-two">2号</view>
-    <view bindtap="toolsChooseType(1, 2)" class="{{tools.right_2 ? 'tools-choose' : ''}} right-three">3号</view>
-    <view bindtap="toolsChooseType(1, 3)" class="{{tools.right_3 ? 'tools-choose' : ''}} right-four">4号</view>
-    <view bindtap="toolsChooseType(2, 0)" class="{{tools.right_4 ? 'tools-choose' : ''}} right-five tools-choose">笔</view>
-    <view bindtap="toolsChooseType(2, 1)" class="{{tools.right_5 ? 'tools-choose' : ''}} right-six">檫</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="0" class="{{tools.size[0] ? 'tools-choose' : ''}} right-one">1号</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="1" class="{{tools.size[1] ? 'tools-choose' : ''}} right-two">2号</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="2" class="{{tools.size[2] ? 'tools-choose' : ''}} right-three">3号</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="3" class="{{tools.size[3] ? 'tools-choose' : ''}} right-four">4号</view>
+    <view bindtap="toolsChooseType" data-type="2" data-value="0" class="{{tools.tool[0] ? 'tools-choose' : ''}} right-five">笔</view>
+    <view bindtap="toolsChooseType" data-type="2" data-value="1" class="{{tools.tool[1] ? 'tools-choose' : ''}} right-six">檫</view>
   </view>
 </view>

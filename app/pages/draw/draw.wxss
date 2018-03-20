@@ -1,5 +1,5 @@
 
-.container {
+.draw-container {
   display: flex;
 }
 .tools-left, .tools-right {
@@ -10,7 +10,7 @@
   width: 30px;
 }
 .draw {
-  margin: 0 1px;
+  margin: 0 1px !important;
   border: 1px solid red;
   display: flex;
   height: 200px;

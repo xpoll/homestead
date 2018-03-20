@@ -2,25 +2,117 @@
 var app = getApp()
 Page({
   data: {
+    canvas: null,
+    context: null,
     tools: {
-      left_0: true,
-      left_1: false,
-      left_2: false,
-      left_3: false,
-      left_4: false,
-      left_5: false,
-      right_0: true,
-      right_1: false,
-      right_2: false,
-      right_3: false,
-      right_4: true,
-      right_5: false,
+      color: [true, false, false, false, false],
+      tool: [true, false],
+      size: [true, false, false, false]
+    },
+    arr: {
+      color: ["#cb3594", "#659b41", "#ffcf33", "#986928", "#000000", "#ffffff"],
+      size: [2, 4, 8, 16],
+      tool: [0, 1]
+    },
+    cur: {
+      color: "#cb3594",
+      size: 2,
+      tool: 0,
+      paint: false
+    },
+    draw: {
+      x: [],
+      y: [],
+      color: [],
+      size: [],
+      tool: [],
+      paint: []
+    },
+    coor: {
+      left: 0,
+      top: 0
     }
   },
-  toolsChooseType: function (type, value) {
+  toolsChooseType: function (event) {
+    // 工具箱点击事件
+    var that = this
+    var type = event.currentTarget.dataset.type
+    var value = event.currentTarget.dataset.value
+    if (type == 0) {// 涂料
+      that.setData({ 'tools.color': choose(that.data.tools.color, value) })
+      that.setData({ 'cur.color': that.data.arr.color[value] })
+    } else if (type == 1) {// 粗细
+      that.setData({ 'tools.size': choose(that.data.tools.size, value) })
+      that.setData({ 'cur.size': that.data.arr.size[value] })
+    } else if (type == 2) {// 笔檫
+      that.setData({ 'tools.tool': choose(that.data.tools.tool, value) })
+      that.setData({ 'cur.tool': that.data.arr.tool[value] })
+    } else if (type == 3) {// 清除
+      that.resetdraw()
+    }
+    function choose(arr, num) { for (var i = 0; i < arr.length; i++) arr[i] = (num == i); return arr }
+  },
+  bindtouchstart: function (event) {
+    this.setData({ 'cur.paint': true })
+    this.addClick(event.changedTouches[0].x, event.changedTouches[0].y, false)
+    this.redraw()
+  },
+  bindtouchmove: function (event) {
+    if (this.data.cur.paint) {
+      this.addClick(event.changedTouches[0].x, event.changedTouches[0].y, true)
+      this.redraw()
+    }
+  },
+  bindtouchend: function (event) {
+    this.setData({ 'cur.paint': false })
+    this.redraw()
+  },
+  bindtouchcancel: function (event) {
+    this.setData({ 'cur.paint': false })
+  },
+  addClick: function (x, y, p) {
+    this.data.draw.x.push(x)
+    this.data.draw.y.push(y)
+    this.data.draw.color.push(this.data.cur.color)
+    this.data.draw.size.push(this.data.cur.size)
+    this.data.draw.tool.push(this.data.cur.tool)
+    this.data.draw.paint.push(p)
+    // this.setData({ 'draw.x': this.data.draw.x })
+    // this.setData({ 'draw.y': this.data.draw.y })
+    // this.setData({ 'draw.color': this.data.draw.color })
+    // this.setData({ 'draw.size': this.data.draw.size })
+    // this.setData({ 'draw.tool': this.data.draw.tool })
+    // this.setData({ 'draw.paint': this.data.draw.paint })
+  },
+  resetdraw: function () {
+    this.data.draw.x = []
+    this.data.draw.y = []
+    this.data.draw.color = []
+    this.data.draw.size = []
+    this.data.draw.tool = []
+    this.data.draw.paint = []
+    this.redraw()
+  },
+  redraw: function () {
+    this.data.context.clearRect(0, 0, 300, 200)
+    for (var i = 1; i < this.data.draw.x.length; i++) {
+      this.data.context.beginPath()
+      if (this.data.draw.paint[i] && i) {
+        this.data.context.moveTo(this.data.draw.x[i - 1], this.data.draw.y[i - 1])
+        this.data.context.lineTo(this.data.draw.x[i], this.data.draw.y[i])
+      }
+      this.data.context.closePath()
+      this.data.context.setStrokeStyle(this.data.draw.tool[i] == this.data.arr.tool[1] ? this.data.arr.color[5] : this.data.draw.color[i])
+      this.data.context.lineJoin = "round"
 
+      this.data.context.setLineWidth(this.data.draw.size[i])
+      this.data.context.stroke()
+    }
+    this.data.context.restore()
+    this.data.context.draw()
   },
   onLoad: function () {
+    var that = this
     var socketOpen = false
     wx.connectSocket({
       url: app.globalData.wsDomain + '/endpoint/deal/applet',
@@ -43,133 +135,10 @@ Page({
         })
       }
     }
-
-
-    // var query = wx.createSelectorQuery()
-    // var arrDiv = query.selectAll('.tools-tool')
-    
-
-    // var aDiv = document.getElementById('tools-left').getElementsByTagName('view')
-    // var bDiv = document.getElementById('tools-right').getElementsByTagName('view')
-    // // 工具箱点击事件
-    // aDiv[0].onclick = function () { colorToolsChoose(0); clearToolsClass(this, new Array(aDiv[1], aDiv[2], aDiv[3], aDiv[4])) }
-    // aDiv[1].onclick = function () { colorToolsChoose(1); clearToolsClass(this, new Array(aDiv[0], aDiv[2], aDiv[3], aDiv[4])) }
-    // aDiv[2].onclick = function () { colorToolsChoose(2); clearToolsClass(this, new Array(aDiv[0], aDiv[1], aDiv[3], aDiv[4])) }
-    // aDiv[3].onclick = function () { colorToolsChoose(3); clearToolsClass(this, new Array(aDiv[0], aDiv[1], aDiv[2], aDiv[4])) }
-    // aDiv[4].onclick = function () { colorToolsChoose(4); clearToolsClass(this, new Array(aDiv[0], aDiv[1], aDiv[2], aDiv[3])) }
-    // aDiv[5].onclick = function () { resetdraw() }
-
-    // bDiv[0].onclick = function () { sizeToolsChoose(0); clearToolsClass(this, new Array(bDiv[1], bDiv[2], bDiv[3])) }
-    // bDiv[1].onclick = function () { sizeToolsChoose(1); clearToolsClass(this, new Array(bDiv[0], bDiv[2], bDiv[3])) }
-    // bDiv[2].onclick = function () { sizeToolsChoose(2); clearToolsClass(this, new Array(bDiv[0], bDiv[1], bDiv[3])) }
-    // bDiv[3].onclick = function () { sizeToolsChoose(3); clearToolsClass(this, new Array(bDiv[0], bDiv[1], bDiv[2])) }
-    // bDiv[4].onclick = function () { toolsChoose(0); clearToolsClass(this, new Array(bDiv[5])) }
-    // bDiv[5].onclick = function () { toolsChoose(1); clearToolsClass(this, new Array(bDiv[4])) }
-    // /**
-    //  * 工具箱选中样式
-    //  */
-    // function clearToolsClass(e, arr) {
-    //   e.classList.add('tools-choose')
-    //   for (var i = 0; i < arr.length; i++) {
-    //     arr[i].classList.remove('tools-choose')
-    //   }
-    // }
-    function colorToolsChoose(num) {
-      curColor = colorArr[num]
-    }
-    function sizeToolsChoose(num) {
-      curSize = sizeArr[num]
-    }
-    function toolsChoose(num) {
-      curTool = toolArr[num]
-    }
-    // 数据定义
-    var canvas = document.getElementById('draw')
-    var canvasWidth = 400;
-    var canvasHeight = 200;
-    canvas.setAttribute('width', canvasWidth);
-    canvas.setAttribute('height', canvasHeight);
-    var drawLeft = canvas.getBoundingClientRect().left;
-    var drawTop = canvas.getBoundingClientRect().top
-    if (typeof G_vmlCanvasManager != 'undefined') {
-      canvas = G_vmlCanvasManager.initElement(canvas);
-    }
-    var context = canvas.getContext("2d")
-
-    var sizeArr = new Array(2, 4, 8, 16)
-    var colorArr = new Array("#cb3594", "#659b41", "#ffcf33", "#986928", "#000000", "#ffffff")
-    var toolArr = new Array(0, 1)// 0 笔芯 1 橡皮擦
-    var curColor = colorArr[0]
-    var curSize = sizeArr[0]
-    var curTool = toolArr[0]
-    var paint = false
-    var drawX = [], drawY = [], drawTool = [], drawColor = [], drawSize = [], drawPaint = []
-
-    canvas.onmousedown = function (e) {
-      var x = e.pageX - this.offsetLeft;
-      var y = e.pageY - this.offsetTop;
-      drawmousedown(x, y);
-    }
-    canvas.onmousemove = function (e) {
-      var x = e.pageX - this.offsetLeft;
-      var y = e.pageY - this.offsetTop;
-      drawmousemove(x, y);
-    }
-    canvas.onmouseup = function (e) {
-      drawmouseup();
-    }
-    canvas.onmouseleave = function (e) {
-      drawmouseleave();
-    }
-
-    function drawmousedown(x, y) {
-      paint = true
-      addClick(x, y, false)
-      redraw()
-    }
-    function drawmousemove(x, y) {
-      if (paint) {
-        addClick(x, y, true)
-        redraw()
-      }
-    }
-    function drawmouseup() {
-      paint = false
-      redraw()
-    }
-    function drawmouseleave() {
-      paint = false
-    }
-    function addClick(x, y, p) {
-      console.info(x, y, p)
-      drawX.push(x)
-      drawY.push(y)
-      drawTool.push(curTool)
-      drawColor.push(curColor)
-      drawSize.push(curSize)
-      drawPaint.push(p)
-    }
-    function resetdraw() {
-      drawX = [], drawY = [], drawTool = [], drawColor = [], drawSize = [], drawPaint = []
-      redraw()
-    }
-    function redraw() {
-      context.clearRect(0, 0, canvasWidth, canvasHeight)
-      console.info(drawX[drawX.length - 1], drawY[drawY.length - 1])
-      for (var i = 1; i < drawX.length; i++) {
-        context.beginPath()
-        if (drawPaint[i] && i) {
-          context.moveTo(drawX[i - 1], drawY[i - 1])
-          context.lineTo(drawX[i], drawY[i])
-        }
-        context.closePath()
-        context.strokeStyle = drawTool[i] == toolArr[1] ? colorArr[5] : drawColor[i]
-        context.lineJoin = "round"
-        context.lineWidth = drawSize[i]
-        context.stroke()
-      }
-      context.restore()
-      context.globalAlpha = 1
-    }
+    wx.createSelectorQuery().in(that).select('.draw').boundingClientRect(function (res) {
+      that.setData({ 'coor.left': (res.left + 1) })
+      that.setData({ 'coor.top': (res.top + 1) })
+    }).exec()
+    this.data.context = wx.createCanvasContext("draw")
   }
 })
