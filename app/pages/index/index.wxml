@@ -1,7 +1,7 @@
 <!--index.wxml-->
 <view class="container">
   <view bindtap="bindViewTap" class="userinfo">
-     <!-- <image class="userinfo-avatar" src="{{userInfo.avatar}}" background-size="cover"></image>  -->
+      <image class="userinfo-avatar" src="{{userInfo.avatar}}" background-size="cover"></image>  
     <text class="userinfo-nickname">{{userInfo.nick}}</text>
   </view>
   <view class="usermotto">

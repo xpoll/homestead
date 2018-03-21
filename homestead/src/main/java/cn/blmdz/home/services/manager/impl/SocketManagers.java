@@ -76,35 +76,35 @@ public class SocketManagers implements SocketManager {
             gameWaitUsers.remove(user.getId());
             sendMessage(user.getId(), new BaseMsg(SocketType.REQUEST_SUCCESS.value(), null));
             break;
+
+        case DRAW_SCRAWL: // (1, "绘画"),
+        case DRAW_RESET_CLEAR: // (5, "清除画布"),
+            Long roomId = gameRunUsers.get(user.getId());
+            if (roomId == null) break;
             
-        case DRAW_MOUSE_DOWN: // (1, "绘画-鼠标单机点下去"),
-        case DRAW_MOUSE_MOVE: // (2, "绘画-鼠标移动"),
-        case DRAW_MOUSE_UP: // (3, "绘画-鼠标单机放开"),
-        case DRAW_MOUSE_LEAVE: // (4, "绘画-鼠标立刻"),
-        case DRAW_RESET_CLEAR: // (5, "绘画-按钮清楚画布"),
-			for (Long id : allUsers.keySet()) {
+			for (Long id : gameRunRooms.get(roomId)) {
 				if (Objects.equal(user.getId(), id)) continue;
 				sendMessage(id, baseMsg);
 			}
             break;
         case GAME_TALK_TEAM: // (21, "游戏-聊天队伍"),
-        	Long roomId = gameRunUsers.get(user.getId());
-        	if (roomId == null) break;
-        	List<QuestionData> qs = gameRoomQuestion.get(roomId);
+        	Long roomId1 = gameRunUsers.get(user.getId());
+        	if (roomId1 == null) break;
+        	List<QuestionData> qs = gameRoomQuestion.get(roomId1);
         	if (CollectionUtils.isEmpty(qs)) {
-    			for (Long id : gameRunRooms.get(roomId)) {
+    			for (Long id : gameRunRooms.get(roomId1)) {
     				sendMessage(id, baseMsg);
     			}
         	} else {
         		QuestionData q = qs.get(qs.size() - 1);
         		boolean answer = Objects.equal(q.getAnswer(), baseMsg.getMsg().trim());
         		if (!answer) {
-	    			for (Long id : gameRunRooms.get(roomId)) {
+	    			for (Long id : gameRunRooms.get(roomId1)) {
 	    				sendMessage(id, baseMsg);
 	    			}
         		} else {
         			q.getParts().add(user.getId());
-	    			for (Long id : gameRunRooms.get(roomId)) {
+	    			for (Long id : gameRunRooms.get(roomId1)) {
 	    				if ( Objects.equal(user.getId(), id)) {
 	    					sendMessage(id, new BaseMsg(SocketType.GAME_GUESS_SUCCESS.value(), SocketType.GAME_GUESS_SUCCESS.description()));
 	    				} else {

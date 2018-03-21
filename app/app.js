@@ -50,9 +50,9 @@ App({
   },
   globalData:{
     user: null,
-    // wsDomain: 'ws://127.0.0.1:8082',
-    // httpDomain: 'http://127.0.0.1:8082'
-    wsDomain: 'ws://blmdz.cn',
-    httpDomain: 'http://blmdz.cn'
+    wsDomain: 'ws://127.0.0.1:8082',
+    httpDomain: 'http://127.0.0.1:8082'
+    // wsDomain: 'wss://blmdz.cn',
+    // httpDomain: 'https://blmdz.cn'
   }
 })

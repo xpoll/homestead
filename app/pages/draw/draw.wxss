@@ -1,6 +1,7 @@
 
 .draw-container {
   display: flex;
+  overflow: none;
 }
 .tools-left, .tools-right {
   border: 1px solid red;
@@ -23,7 +24,7 @@
   border-radius: 15px;
   line-height: 28px;
 }
-.tools-left view:hover, .tools-right view:hover, .tools-choose {
+/*.tools-left view:hover, .tools-right view:hover, */.tools-choose {
   border: 1px solid #000 !important;
   cursor: pointer;
 }

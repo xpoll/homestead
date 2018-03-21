@@ -1,5 +1,5 @@
 <!--draw.wxml-->
-<view class="draw-container" onselectstart="return false;">
+<view class="draw-container" onselectstart="return false;" disable-scroll="true">
   <view class="tools-left" id="tools-left">
     <view bindtap="toolsChooseType" data-type="0" data-value="0" class="{{tools.color[0] ? 'tools-choose' : ''}} left-one"></view>
     <view bindtap="toolsChooseType" data-type="0" data-value="1" class="{{tools.color[1] ? 'tools-choose' : ''}} left-two"></view>
@@ -10,11 +10,15 @@
   </view>
   <canvas style="width: 300px;height: 200px; margin: 10px auto;" canvas-id="draw" class="draw" disable-scroll="true" bindtouchstart="bindtouchstart" bindtouchmove="bindtouchmove" bindtouchend="bindtouchend" bindtouchcancel="bindtouchcancel" ></canvas>
   <view class="tools-right" id="tools-right">
-    <view bindtap="toolsChooseType" data-type="1" data-value="0" class="{{tools.size[0] ? 'tools-choose' : ''}} right-one">1号</view>
-    <view bindtap="toolsChooseType" data-type="1" data-value="1" class="{{tools.size[1] ? 'tools-choose' : ''}} right-two">2号</view>
-    <view bindtap="toolsChooseType" data-type="1" data-value="2" class="{{tools.size[2] ? 'tools-choose' : ''}} right-three">3号</view>
-    <view bindtap="toolsChooseType" data-type="1" data-value="3" class="{{tools.size[3] ? 'tools-choose' : ''}} right-four">4号</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="0" class="{{tools.size[0] ? 'tools-choose' : ''}} right-one">1</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="1" class="{{tools.size[1] ? 'tools-choose' : ''}} right-two">2</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="2" class="{{tools.size[2] ? 'tools-choose' : ''}} right-three">3</view>
+    <view bindtap="toolsChooseType" data-type="1" data-value="3" class="{{tools.size[3] ? 'tools-choose' : ''}} right-four">4</view>
     <view bindtap="toolsChooseType" data-type="2" data-value="0" class="{{tools.tool[0] ? 'tools-choose' : ''}} right-five">笔</view>
     <view bindtap="toolsChooseType" data-type="2" data-value="1" class="{{tools.tool[1] ? 'tools-choose' : ''}} right-six">檫</view>
   </view>
+</view>
+<view>
+  <button bindtap='bindMatchGame' class='user-draw'>匹配</button>
+  <button bindtap='bindSendChat' class='user-draw'>发送</button>
 </view>

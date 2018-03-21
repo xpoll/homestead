@@ -130,7 +130,9 @@
   var curSize = sizeArr[0]
   var curTool = toolArr[0]
   var paint = false
-  var drawX = [], drawY = [], drawTool = [], drawColor = [], drawSize = [], drawPaint = []
+  var drawObjPrevious = new Object()
+  var drawObjCurrent = new Object()
+  // var drawX = [], drawY = [], drawTool = [], drawColor = [], drawSize = [], drawPaint = []
 
   canvas.onmousedown = function(e){
     var x = e.pageX - this.offsetLeft;
@@ -151,52 +153,44 @@
 
   function drawmousedown(x, y) {
     paint = true
-    addClick(x, y, false)
-    redraw()
+    redraw(x, y, false)
   }
   function drawmousemove(x, y) {
-    if (paint) {
-      addClick(x, y, true)
-      redraw()
-    }
+    paint ? redraw(x, y, true) : null
   }
   function drawmouseup() {
     paint = false
-    redraw()
   }
   function drawmouseleave() {
     paint = false
   }
-  function addClick(x, y, p) {
-      console.info(x, y, p)
-    drawX.push(x)
-    drawY.push(y)
-    drawTool.push(curTool)
-    drawColor.push(curColor)
-    drawSize.push(curSize)
-    drawPaint.push(p)
-  }
   function resetdraw() {
-    drawX = [], drawY = [], drawTool = [], drawColor = [], drawSize = [], drawPaint = []
-    redraw()
-  }
-  function redraw() {
     context.clearRect(0, 0, canvasWidth, canvasHeight)
-    console.info(drawX[drawX.length-1], drawY[drawY.length-1])
-    for(var i = 1; i < drawX.length; i++) {
-      context.beginPath()
-      if (drawPaint[i] && i) {
-        context.moveTo(drawX[i-1], drawY[i-1])
-        context.lineTo(drawX[i], drawY[i])
-      }
-      context.closePath()
-      context.strokeStyle = drawTool[i] == toolArr[1] ? colorArr[5] : drawColor[i]
-      context.lineJoin = "round"
-      context.lineWidth = drawSize[i]
-      context.stroke()
+    drawObjPrevious = new Object()
+    drawObjCurrent = new Object()
+  }
+  function redraw(x, y, p) {
+    var obj = new Object()
+    obj.x = x
+    obj.y = y
+    obj.paint = p
+    obj.tool = curTool
+    obj.color = curColor
+    obj.size = curSize
+    drawObjPrevious = drawObjCurrent
+    drawObjCurrent = obj
+
+    context.beginPath()
+    if (drawObjCurrent.paint) {
+      context.moveTo(drawObjPrevious.x, drawObjPrevious.y)
+      context.lineTo(drawObjCurrent.x, drawObjCurrent.y)
     }
+    context.closePath()
+    context.strokeStyle = drawObjCurrent.tool == toolArr[1] ? colorArr[5] : drawObjCurrent.color
+    context.lineJoin = "round"
+    context.lineWidth = drawObjCurrent.size
+    context.stroke()
     context.restore()
-    context.globalAlpha = 1
   }
 
 </script>

@@ -4,6 +4,8 @@ Page({
   data: {
     canvas: null,
     context: null,
+    socketOpen: false,
+    socket: null,
     tools: {
       color: [true, false, false, false, false],
       tool: [true, false],
@@ -21,12 +23,8 @@ Page({
       paint: false
     },
     draw: {
-      x: [],
-      y: [],
-      color: [],
-      size: [],
-      tool: [],
-      paint: []
+      previous: null,
+      current: null
     },
     coor: {
       left: 0,
@@ -54,91 +52,88 @@ Page({
   },
   bindtouchstart: function (event) {
     this.setData({ 'cur.paint': true })
-    this.addClick(event.changedTouches[0].x, event.changedTouches[0].y, false)
-    this.redraw()
+    this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, false)
+    this.sendSocketMessage('{"type": 1, "msg": "xxxxx"}')
   },
   bindtouchmove: function (event) {
     if (this.data.cur.paint) {
-      this.addClick(event.changedTouches[0].x, event.changedTouches[0].y, true)
-      this.redraw()
+      this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, true)
     }
   },
   bindtouchend: function (event) {
     this.setData({ 'cur.paint': false })
-    this.redraw()
   },
   bindtouchcancel: function (event) {
     this.setData({ 'cur.paint': false })
   },
-  addClick: function (x, y, p) {
-    this.data.draw.x.push(x)
-    this.data.draw.y.push(y)
-    this.data.draw.color.push(this.data.cur.color)
-    this.data.draw.size.push(this.data.cur.size)
-    this.data.draw.tool.push(this.data.cur.tool)
-    this.data.draw.paint.push(p)
-    // this.setData({ 'draw.x': this.data.draw.x })
-    // this.setData({ 'draw.y': this.data.draw.y })
-    // this.setData({ 'draw.color': this.data.draw.color })
-    // this.setData({ 'draw.size': this.data.draw.size })
-    // this.setData({ 'draw.tool': this.data.draw.tool })
-    // this.setData({ 'draw.paint': this.data.draw.paint })
-  },
   resetdraw: function () {
-    this.data.draw.x = []
-    this.data.draw.y = []
-    this.data.draw.color = []
-    this.data.draw.size = []
-    this.data.draw.tool = []
-    this.data.draw.paint = []
-    this.redraw()
-  },
-  redraw: function () {
     this.data.context.clearRect(0, 0, 300, 200)
-    for (var i = 1; i < this.data.draw.x.length; i++) {
-      this.data.context.beginPath()
-      if (this.data.draw.paint[i] && i) {
-        this.data.context.moveTo(this.data.draw.x[i - 1], this.data.draw.y[i - 1])
-        this.data.context.lineTo(this.data.draw.x[i], this.data.draw.y[i])
-      }
-      this.data.context.closePath()
-      this.data.context.setStrokeStyle(this.data.draw.tool[i] == this.data.arr.tool[1] ? this.data.arr.color[5] : this.data.draw.color[i])
-      this.data.context.lineJoin = "round"
-
-      this.data.context.setLineWidth(this.data.draw.size[i])
-      this.data.context.stroke()
-    }
-    this.data.context.restore()
+    this.setData({'draw.previous': new Object()})
+    this.setData({'draw.current': new Object()})
     this.data.context.draw()
+  },
+  redraw: function (x, y, p) {
+    var obj = new Object()
+    obj.x = x
+    obj.y = y
+    obj.paint = p
+    obj.tool = this.data.cur.tool
+    obj.color = this.data.cur.color
+    obj.size = this.data.cur.size
+
+    this.setData({'draw.previous': this.data.draw.current})
+    this.setData({'draw.current': obj})
+
+    var context = this.data.context
+    context.beginPath()
+    if (this.data.draw.current.paint && this.data.draw.previous) {
+      context.moveTo(this.data.draw.previous.x, this.data.draw.previous.y)
+      context.lineTo(this.data.draw.current.x, this.data.draw.current.y)
+    }
+    context.closePath()
+    context.setStrokeStyle(this.data.draw.current.tool == this.data.arr.tool[1] ? this.data.arr.color[5] : this.data.draw.current.color)
+    context.setLineJoin("round")
+    context.setLineCap("round")
+    context.setLineWidth(this.data.draw.current.size)
+    context.stroke()
+    context.restore()
+    context.draw(true)
+  },
+  sendSocketMessage: function (msg) {
+    if (this.data.socketOpen) {
+      wx.sendSocketMessage({
+        data: msg
+      })
+    }
   },
   onLoad: function () {
     var that = this
-    var socketOpen = false
-    wx.connectSocket({
-      url: app.globalData.wsDomain + '/endpoint/deal/applet',
-      success: function (a) {
-        console.info('建立连接！')
-      }
-    })
-    wx.onSocketOpen(function (res) {
-      socketOpen = true
-      console.log('WebSocket连接已打开！')
-      sendSocketMessage('{"type": 41, "msg": "xxxxx"}')
-    })
+
+    if (that.data.socket == null || !that.data.socketOpen) {
+      var socket = wx.connectSocket({
+        url: app.globalData.wsDomain + '/endpoint/deal/applet',
+        success: function (a) {
+          console.info('建立连接！')
+        }
+      })
+      that.setData({'socket': 'socket'})
+      wx.onSocketOpen(function (res) {
+        console.log('WebSocket连接已打开！')
+        that.setData({'socketOpen': true})
+        that.sendSocketMessage('{"type": 1, "msg": "xxxxx"}')
+      })
+    }
     wx.onSocketMessage(function (res) {
       console.log('收到服务器内容：' + res.data)
     })
-    function sendSocketMessage(msg) {
-      if (socketOpen) {
-        wx.sendSocketMessage({
-          data: msg
-        })
-      }
-    }
-    wx.createSelectorQuery().in(that).select('.draw').boundingClientRect(function (res) {
-      that.setData({ 'coor.left': (res.left + 1) })
-      that.setData({ 'coor.top': (res.top + 1) })
-    }).exec()
+    wx.onSocketClose(function(res) {
+      console.log('WebSocket 已关闭！')
+      that.setData({'socketOpen': false})
+    })
+    // wx.createSelectorQuery().in(that).select('.draw').boundingClientRect(function (res) {
+    //   that.setData({ 'coor.left': (res.left + 1) })
+    //   that.setData({ 'coor.top': (res.top + 1) })
+    // }).exec()
     this.data.context = wx.createCanvasContext("draw")
   }
 })

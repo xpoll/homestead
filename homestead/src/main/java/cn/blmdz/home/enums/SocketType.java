@@ -5,11 +5,8 @@ public enum SocketType {
 	REQUEST_FAILD(-1, "请求失败"),
 	REQUEST_SUCCESS(0, "请求成功"),
     
-    DRAW_MOUSE_DOWN(1, "绘画-鼠标单机点下去"),
-    DRAW_MOUSE_MOVE(2, "绘画-鼠标移动"),
-    DRAW_MOUSE_UP(3, "绘画-鼠标单机放开"),
-    DRAW_MOUSE_LEAVE(4, "绘画-鼠标立刻"),
-    DRAW_RESET_CLEAR(5, "绘画-按钮清楚画布"),
+    DRAW_SCRAWL(1, "绘画"),
+    DRAW_RESET_CLEAR(5, "清除画布"),
     
     GAME_MATCH_REQUEST(11, "游戏-匹配排队请求"),
     GAME_MATCH_CANCEL(12, "游戏-匹配排队取消"),
