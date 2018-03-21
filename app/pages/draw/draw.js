@@ -53,7 +53,6 @@ Page({
   bindtouchstart: function (event) {
     this.setData({ 'cur.paint': true })
     this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, false)
-    this.sendSocketMessage('{"type": 1, "msg": "xxxxx"}')
   },
   bindtouchmove: function (event) {
     if (this.data.cur.paint) {
@@ -81,6 +80,8 @@ Page({
     obj.color = this.data.cur.color
     obj.size = this.data.cur.size
 
+    this.sendSocketMessage(1, obj)
+
     this.setData({'draw.previous': this.data.draw.current})
     this.setData({'draw.current': obj})
 
@@ -99,10 +100,10 @@ Page({
     context.restore()
     context.draw(true)
   },
-  sendSocketMessage: function (msg) {
+  sendSocketMessage: function (type, obj) {
     if (this.data.socketOpen) {
       wx.sendSocketMessage({
-        data: msg
+        data: JSON.stringify({'type': type, 'msg': JSON.stringify(obj)})
       })
     }
   },
@@ -120,7 +121,6 @@ Page({
       wx.onSocketOpen(function (res) {
         console.log('WebSocket连接已打开！')
         that.setData({'socketOpen': true})
-        that.sendSocketMessage('{"type": 1, "msg": "xxxxx"}')
       })
     }
     wx.onSocketMessage(function (res) {
