@@ -4,7 +4,12 @@ view {
 }
 .draw-container {
   display: flex;
+  flex-direction: column;
   overflow: none;
+}
+.draw-content {
+  display: flex;
+  flex-direction: row;
 }
 .tools-left, .tools-right {
   border: 1px solid red;

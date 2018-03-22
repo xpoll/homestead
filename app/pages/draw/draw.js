@@ -31,7 +31,7 @@ Page({
       top: 0
     },
     game: {
-      drawer: false,
+      drawer: true,
       tips: '',
       answer: ''
     }
@@ -51,23 +51,41 @@ Page({
       that.setData({ 'tools.tool': choose(that.data.tools.tool, value) })
       that.setData({ 'cur.tool': that.data.arr.tool[value] })
     } else if (type == 3) {// 清除
-      that.resetdraw()
+      that.resetdraw(that.data.game.drawer)
     }
     function choose(arr, num) { for (var i = 0; i < arr.length; i++) arr[i] = (num == i); return arr }
   },
   bindMatchGame: function (event) {
-    this.sendSocketMessage(11, '')
+    this.sendSocketMessage(11, '', false)
     wx.showLoading({title: 'match...'})
   },
   bindtouchstart: function (event) {
     if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': true })
-    this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, false)
+
+    var obj = new Object()
+    obj.x = event.changedTouches[0].x
+    obj.y = event.changedTouches[0].y
+    obj.paint = false
+    obj.tool = this.data.cur.tool
+    obj.color = this.data.cur.color
+    obj.size = this.data.cur.size
+
+    this.redraw(obj, true)
   },
   bindtouchmove: function (event) {
     if (!this.data.game.drawer) return
     if (this.data.cur.paint) {
-      this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, true)
+
+      var obj = new Object()
+      obj.x = event.changedTouches[0].x
+      obj.y = event.changedTouches[0].y
+      obj.paint = true
+      obj.tool = this.data.cur.tool
+      obj.color = this.data.cur.color
+      obj.size = this.data.cur.size
+
+      this.redraw(obj, true)
     }
   },
   bindtouchend: function (event) {
@@ -78,22 +96,15 @@ Page({
     if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': false })
   },
-  resetdraw: function () {
+  resetdraw: function (send) {
     this.data.context.clearRect(0, 0, 300, 200)
     this.setData({'draw.previous': new Object()})
     this.setData({'draw.current': new Object()})
     this.data.context.draw()
+    if (send) this.sendSocketMessage(5, '', false)
   },
-  redraw: function (x, y, p) {
-    var obj = new Object()
-    obj.x = x
-    obj.y = y
-    obj.paint = p
-    obj.tool = this.data.cur.tool
-    obj.color = this.data.cur.color
-    obj.size = this.data.cur.size
-
-    this.sendSocketMessage(1, obj)
+  redraw: function (obj, send) {
+    if (send) this.sendSocketMessage(1, obj, true)
 
     this.setData({'draw.previous': this.data.draw.current})
     this.setData({'draw.current': obj})
@@ -113,10 +124,10 @@ Page({
     context.restore()
     context.draw(true)
   },
-  sendSocketMessage: function (type, obj) {
+  sendSocketMessage: function (type, obj, turn) {
     if (this.data.socketOpen) {
       wx.sendSocketMessage({
-        data: JSON.stringify({'type': type, 'msg': JSON.stringify(obj)})
+        data: JSON.stringify({'type': type, 'msg': turn ? JSON.stringify(obj) : obj})
       })
     }
   },
@@ -134,6 +145,11 @@ Page({
       wx.onSocketOpen(function (res) {
         console.log('WebSocket连接已打开！')
         that.setData({'socketOpen': true})
+        if (app.globalData == null) {
+          wx.showToast({title: '未登录', 'icon': 'none'})
+        } else {
+          that.sendSocketMessage(888, app.globalData.user.session, false)
+        }
       })
     }
     wx.onSocketMessage(function (res) {
@@ -156,29 +172,30 @@ Page({
     console.info(obj)
     var that = this
     var type = obj.type
-    if (type == 21) {
+    if (type == 1) {
+      that.redraw(JSON.parse(obj.msg), false)
+    } else if (type == 5) {
+      that.resetdraw(false)
+    } else if (type == 21) {
       wx.hideLoading()
+      that.resetdraw(false)
+    } else if (type == 22) {
+      wx.showToast({title: obj.msg, 'icon': 'none'})
+      that.resetdraw(false)
     } else if (type == 31) {
-      that.setData({'game.drawer': false, 'game.tips': '', 'game.answer': obj.msg})
+      that.setData({'game.drawer': true, 'game.tips': '', 'game.answer': obj.msg})
+      that.resetdraw(false)
     } else if (type == 32) {
-      that.setData({'game.drawer': true, 'game.tips': obj.msg, 'game.answer': ''})
+      that.setData({'game.drawer': false, 'game.tips': obj.msg, 'game.answer': ''})
+      that.resetdraw(false)
     } else if (type == 33) {
-      wx.showLoading({title: 'yes'})
-      that.hideLoadingLater()
+      wx.showToast({title: 'yes', 'icon': 'none'})
     } else if (type == 34) {
-      wx.showLoading({title: 'no'})
-      that.hideLoadingLater()
+      wx.showToast({title: 'no', 'icon': 'none'})
     } else if (type == 35) {
-      wx.showLoading({title: 'right: ' + obj.msg})
-      that.hideLoadingLater()
+      wx.showToast({title: 'right: ' + obj.msg, 'icon': 'none'})
+      that.setData({'game.drawer': false, 'game.tips': '', 'game.answer': ''})
+      that.resetdraw(false)
     }
-
-
-    // game: {
-    //   drawer: false,
-    //   tips: null
-    // }
-
-
   }
 })

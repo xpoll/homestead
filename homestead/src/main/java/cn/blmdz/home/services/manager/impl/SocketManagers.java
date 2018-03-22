@@ -20,6 +20,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import cn.blmdz.home.base.BaseUser;
+import cn.blmdz.home.base.BaseVo;
 import cn.blmdz.home.enums.SocketType;
 import cn.blmdz.home.model.base.QuestionData;
 import cn.blmdz.home.model.msg.BaseMsg;
@@ -32,7 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SocketManagers implements SocketManager {
 	
     // 先暂时不考虑线程问题 TODO
-    
+	public static final Map<String, BaseVo<Date, BaseUser>> sessionKeys = Maps.newHashMap();
+	
     // 所有在线人
     public static final Map<Long, WebSocketSession> allUsers = Maps.newHashMap();
     // 游戏匹配等待者
@@ -48,6 +50,8 @@ public class SocketManagers implements SocketManager {
     public static int gameUserNum = 2;
     
     public static long gameTimeMs = 30000;
+    
+    public static int wechatGameSessionTimeout = 7200000;
 
     @Override
     public void connect(BaseUser user, WebSocketSession session) {
@@ -114,7 +118,6 @@ public class SocketManagers implements SocketManager {
         		}
         	}
             break;
-
         default:
             break;
         }
@@ -214,7 +217,7 @@ class GamePostStartThread extends Thread {
 			SocketManagers.sendMessage(
 				users.get(i),
 				new BaseMsg(i == 0 ? SocketType.GAME_DRAW.value() : SocketType.GAME_GUESS.value(),
-				i == 0 ? "" : question.getTips()));// TODO
+				i == 0 ? question.getAnswer() : question.getTips()));// TODO
 		}
     	while (true) {
     	    // 每2秒检查是否答完题目

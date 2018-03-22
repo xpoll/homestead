@@ -1,5 +1,7 @@
 package cn.blmdz.home.enums;
 
+import com.google.common.base.Objects;
+
 public enum SocketType {
 	
 	REQUEST_FAILD(-1, "请求失败"),
@@ -19,6 +21,9 @@ public enum SocketType {
     GAME_ANSWER(35, "游戏-答案"),
     
     GAME_TALK_TEAM(41, "游戏-聊天队伍"),
+    
+
+    REQUEST_LOGIN(888, "登陆"),
     ;
 
     private final int value;
@@ -31,7 +36,7 @@ public enum SocketType {
 
     public static SocketType from(Integer value) {
         for (SocketType item : values()) {
-            if (Integer.valueOf(item.value) == value) {
+            if (Objects.equal(item.value, value)) {
                 return item;
             }
         }

@@ -5,7 +5,6 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.kevinsawicki.http.HttpRequest;
-import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
 import cn.blmdz.home.base.BaseUser;
@@ -30,6 +28,7 @@ import cn.blmdz.home.model.third.wechat.WechatAppletSessionKeyRequest;
 import cn.blmdz.home.model.third.wechat.WechatAppletSessionKeyResponse;
 import cn.blmdz.home.model.third.wechat.WechatAppletUserInfoResponse;
 import cn.blmdz.home.model.valid.RegisterValid;
+import cn.blmdz.home.services.manager.impl.SocketManagers;
 import cn.blmdz.home.services.service.UserService;
 import cn.blmdz.home.util.AESUtil;
 import cn.blmdz.home.util.JsonMapper;
@@ -44,8 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping(value="/api/applet")
 public class RestWechatAppletsController {
-    
-    public static final Map<String, BaseVo<Date, BaseUser>> sessionKeys = Maps.newHashMap();
     
     @Autowired
     private UserService userService;
@@ -76,6 +73,9 @@ public class RestWechatAppletsController {
             user = decryptToUser(sessionResponse.getSession_key(), iv, encryptedData);
             if (user == null) return Response.build(null);
             
+            user.setSession(sessionResponse.getSession_key());
+            request.getSession().setAttribute("user", user);
+            SocketManagers.sessionKeys.put(user.getSession(), BaseVo.put(new Date(), user));
             log.info("welcome {}! user: {}", user.getNick(), user);
             eventBus.post(new LoginEvent(user.getId()));
         } else {

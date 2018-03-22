@@ -14,4 +14,5 @@ public class BaseUser {
     private Integer level;//等级(基于活跃天)
     @JsonFormat(pattern = Constants.Y, timezone = Constants.TIMEZONE)
     private Date signDate;//最后签到日期
+    private String session;//用作session
 }
