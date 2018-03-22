@@ -1,6 +1,8 @@
 <!--draw.wxml-->
 <view class="draw-container" onselectstart="return false;" disable-scroll="true">
-  <view class="tools-left" id="tools-left">
+  <view wx:if="{{game.drawer}}">轮到我画: {{game.answer}}</view>
+  <view wx:else>轮到我猜: {{game.tips}}</view>
+  <view wx:if="{{game.drawer}}" class="tools-left" id="tools-left">
     <view bindtap="toolsChooseType" data-type="0" data-value="0" class="{{tools.color[0] ? 'tools-choose' : ''}} left-one"></view>
     <view bindtap="toolsChooseType" data-type="0" data-value="1" class="{{tools.color[1] ? 'tools-choose' : ''}} left-two"></view>
     <view bindtap="toolsChooseType" data-type="0" data-value="2" class="{{tools.color[2] ? 'tools-choose' : ''}} left-three"></view>
@@ -9,7 +11,7 @@
     <view bindtap="toolsChooseType" data-type="3" data-value="0" class="{{tools.abc ? 'tools-choose' : ''}} left-six">清</view>
   </view>
   <canvas style="width: 300px;height: 300px; margin: 10px auto;" canvas-id="draw" class="draw" disable-scroll="true" bindtouchstart="bindtouchstart" bindtouchmove="bindtouchmove" bindtouchend="bindtouchend" bindtouchcancel="bindtouchcancel" ></canvas>
-  <view class="tools-right" id="tools-right">
+  <view wx:if="{{game.drawer}}" class="tools-right" id="tools-right">
     <view bindtap="toolsChooseType" data-type="1" data-value="0" class="{{tools.size[0] ? 'tools-choose' : ''}} right-one">1</view>
     <view bindtap="toolsChooseType" data-type="1" data-value="1" class="{{tools.size[1] ? 'tools-choose' : ''}} right-two">2</view>
     <view bindtap="toolsChooseType" data-type="1" data-value="2" class="{{tools.size[2] ? 'tools-choose' : ''}} right-three">3</view>
@@ -19,7 +21,7 @@
   </view>
 </view>
 <view>
-  <!-- <button bindtap='bindMatchGame' class='user-draw'>匹配</button> -->
+  <button bindtap='bindMatchGame' class='user-draw'>匹配</button>
   <view>轮到你输入：惺惺相惜</view>
   <span>
     <input class="input" name="userName" placeholder="请输入发送内容" auto-focus/>

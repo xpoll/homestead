@@ -13,9 +13,9 @@ App({
   },
   getUserInfo:function(cb){
     var that = this
-    if (this.globalData.user){
-      typeof cb == "function" && cb(this.globalData.user)
-    } else {
+    // if (this.globalData.user){
+    //   typeof cb == "function" && cb(this.globalData.user)
+    // } else {
       //调用登录接口
       wx.login({
         success: function (res) {
@@ -46,7 +46,7 @@ App({
           })
         }
       })
-    }
+    // }
   },
   globalData:{
     user: null,

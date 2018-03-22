@@ -4,6 +4,8 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
+import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import com.google.common.collect.Maps;
 import com.google.common.eventbus.EventBus;
 
 import cn.blmdz.home.base.BaseUser;
+import cn.blmdz.home.base.BaseVo;
 import cn.blmdz.home.base.Response;
 import cn.blmdz.home.enums.third.ThirdChannel;
 import cn.blmdz.home.event.LoginEvent;
@@ -29,15 +33,19 @@ import cn.blmdz.home.model.valid.RegisterValid;
 import cn.blmdz.home.services.service.UserService;
 import cn.blmdz.home.util.AESUtil;
 import cn.blmdz.home.util.JsonMapper;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 微信小程序用户识别
  * @author yongzongyang
  * @date 2018年3月19日
  */
+@Slf4j
 @RestController
 @RequestMapping(value="/api/applet")
 public class RestWechatAppletsController {
+    
+    public static final Map<String, BaseVo<Date, BaseUser>> sessionKeys = Maps.newHashMap();
     
     @Autowired
     private UserService userService;
@@ -62,11 +70,16 @@ public class RestWechatAppletsController {
 
         BaseUser user = null;
         if (reqSession.ok()) {
-            WechatAppletSessionKeyResponse sessionResponse = JsonMapper.nonEmptyMapper().fromJson(reqSession.body(), WechatAppletSessionKeyResponse.class);
+            String body = reqSession.body();
+            log.debug("jscode2session info. info: {}", body);
+            WechatAppletSessionKeyResponse sessionResponse = JsonMapper.nonEmptyMapper().fromJson(body, WechatAppletSessionKeyResponse.class);
             user = decryptToUser(sessionResponse.getSession_key(), iv, encryptedData);
             if (user == null) return Response.build(null);
-            request.getSession().setAttribute("user", user);
+            
+            log.info("welcome {}! user: {}", user.getNick(), user);
             eventBus.post(new LoginEvent(user.getId()));
+        } else {
+            log.error("jscode2session error.");
         }
         return Response.build(user);
     }

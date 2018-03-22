@@ -57,7 +57,7 @@ public class SocketManagers implements SocketManager {
     
     @PostConstruct
     public void r() {
-    	System.err.println("匹配分配");
+        log.info("match.........");
     	new GameAllocationThread().start();
     }
     
@@ -144,6 +144,7 @@ public class SocketManagers implements SocketManager {
 /**
  * 匹配分配房间
  */
+@Slf4j
 class GameAllocationThread extends Thread {
 
     @Override
@@ -153,6 +154,7 @@ class GameAllocationThread extends Thread {
 				GameAllocationThread.sleep(5000L);
 			} catch (InterruptedException e) {
 			}
+            log.info("all user: {}, game wait user: {}", SocketManagers.allUsers.keySet(), SocketManagers.gameWaitUsers);
             if (SocketManagers.gameWaitUsers.size() < SocketManagers.gameUserNum) continue;
             
             int times = SocketManagers.gameWaitUsers.size()/SocketManagers.gameUserNum;
@@ -212,7 +214,7 @@ class GamePostStartThread extends Thread {
 			SocketManagers.sendMessage(
 				users.get(i),
 				new BaseMsg(i == 0 ? SocketType.GAME_DRAW.value() : SocketType.GAME_GUESS.value(),
-				i == 0 ? question.getAnswer() : question.getTips()));
+				i == 0 ? "" : question.getTips()));// TODO
 		}
     	while (true) {
     	    // 每2秒检查是否答完题目

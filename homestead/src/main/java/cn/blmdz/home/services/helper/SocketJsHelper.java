@@ -11,12 +11,14 @@ import cn.blmdz.home.base.BaseUser;
 import cn.blmdz.home.model.msg.BaseMsg;
 import cn.blmdz.home.services.manager.SocketManager;
 import cn.blmdz.home.util.JsonMapper;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * socket Helper
  * @author yongzongyang
  * @date 2018年1月26日
  */
+@Slf4j
 @Component
 public class SocketJsHelper implements WebSocketHandler {
     
@@ -30,7 +32,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("接入SOCKET");
+        log.debug("session connect success. session: {}", session.getId());
         BaseUser user = getUser(session);
         if (user == null) return;
         
@@ -42,7 +44,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        System.out.println("发送消息");
+        log.debug("session send msy. session: {}, msg: {}", session.getId(), message.getPayload().toString());
         BaseUser user = getUser(session);
         if (user == null) return;
         
@@ -54,7 +56,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus cs) throws Exception {
-        System.out.println("链接关闭");
+        log.debug("session connect close. session: {}", session.getId());
         BaseUser user = getUser(session);
         if (user == null) return;
 
@@ -66,7 +68,7 @@ public class SocketJsHelper implements WebSocketHandler {
      */
     @Override
     public void handleTransportError(WebSocketSession session, Throwable thrwbl) throws Exception {
-        System.out.println("链接错误");
+        log.error("session connect error. session: {}", session.getId());
         if (session.isOpen()) session.close();
         BaseUser user = getUser(session);
         if (user == null) return;
@@ -76,11 +78,11 @@ public class SocketJsHelper implements WebSocketHandler {
 
     @Override
     public boolean supportsPartialMessages() {
-        System.out.println("supportsPartialMessages");
         return false;
     }
     
     private static BaseUser getUser(WebSocketSession session) {
+        log.debug("session is empty. session: {}", session.getId());
         if (session != null && session.getAttributes().get("user") != null) return (BaseUser) session.getAttributes().get("user");
         return null;
     }

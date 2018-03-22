@@ -29,6 +29,11 @@ Page({
     coor: {
       left: 0,
       top: 0
+    },
+    game: {
+      drawer: false,
+      tips: '',
+      answer: ''
     }
   },
   toolsChooseType: function (event) {
@@ -50,19 +55,27 @@ Page({
     }
     function choose(arr, num) { for (var i = 0; i < arr.length; i++) arr[i] = (num == i); return arr }
   },
+  bindMatchGame: function (event) {
+    this.sendSocketMessage(11, '')
+    wx.showLoading({title: 'match...'})
+  },
   bindtouchstart: function (event) {
+    if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': true })
     this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, false)
   },
   bindtouchmove: function (event) {
+    if (!this.data.game.drawer) return
     if (this.data.cur.paint) {
       this.redraw(event.changedTouches[0].x, event.changedTouches[0].y, true)
     }
   },
   bindtouchend: function (event) {
+    if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': false })
   },
   bindtouchcancel: function (event) {
+    if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': false })
   },
   resetdraw: function () {
@@ -124,7 +137,7 @@ Page({
       })
     }
     wx.onSocketMessage(function (res) {
-      console.log('收到服务器内容：' + res.data)
+      that.receive(JSON.parse(res.data))
     })
     wx.onSocketClose(function(res) {
       console.log('WebSocket 已关闭！')
@@ -135,5 +148,37 @@ Page({
     //   that.setData({ 'coor.top': (res.top + 1) })
     // }).exec()
     this.data.context = wx.createCanvasContext("draw")
+  },
+  hideLoadingLater: function () {
+    setTimeout(function(){wx.hideLoading()},2000)
+  },
+  receive: function(obj) {
+    console.info(obj)
+    var that = this
+    var type = obj.type
+    if (type == 21) {
+      wx.hideLoading()
+    } else if (type == 31) {
+      that.setData({'game.drawer': false, 'game.tips': '', 'game.answer': obj.msg})
+    } else if (type == 32) {
+      that.setData({'game.drawer': true, 'game.tips': obj.msg, 'game.answer': ''})
+    } else if (type == 33) {
+      wx.showLoading({title: 'yes'})
+      that.hideLoadingLater()
+    } else if (type == 34) {
+      wx.showLoading({title: 'no'})
+      that.hideLoadingLater()
+    } else if (type == 35) {
+      wx.showLoading({title: 'right: ' + obj.msg})
+      that.hideLoadingLater()
+    }
+
+
+    // game: {
+    //   drawer: false,
+    //   tips: null
+    // }
+
+
   }
 })
