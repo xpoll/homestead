@@ -12,9 +12,14 @@ Page({
       url: '../logs/logs'
     })
   },
-  bindViewDraw: function () {
+  bindViewDrawMatch: function () {
     wx.navigateTo({
       url: '../draw/draw'
+    })
+  },
+  bindViewDraw: function () {
+    wx.navigateTo({
+      url: '../my/draw'
     })
   },
   onLoad: function () {

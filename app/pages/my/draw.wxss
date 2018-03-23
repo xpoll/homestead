@@ -1,0 +1,65 @@
+
+view {
+  font-size: 12px;
+}
+.draw-container {
+  display: flex;
+  overflow: none;
+}
+.tools-left, .tools-right {
+  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  width: 30px;
+}
+.draw {
+  margin: 0 1px !important;
+  border: 1px solid red;
+  display: flex;
+  height: 400px;
+  width: 200px;
+  cursor: crosshair;
+}
+.tools-left view, .tools-right view {
+  height: 28px;
+  border: 1px solid #eee;
+  border-radius: 15px;
+  line-height: 28px;
+}
+/*.tools-left view:hover, .tools-right view:hover, */.tools-choose {
+  border: 1px solid #000 !important;
+  cursor: pointer;
+}
+.tools-left view:last-child:active {
+  background-color: #eee;
+}
+.tools-left view:first-child, .tools-right view:first-child {
+  margin-top: 10px;
+}
+.left-one {background-color: #cb3594;}
+.left-two {background-color: #659b41;}
+.left-three {background-color: #ffcf33;}
+.left-four {background-color: #986928;}
+.left-five {background-color: #000000;}
+.left-six {background-color: #ffffff;}
+
+.tools-right view, .tools-left view:last-child {font-family: 幼圆;text-align: center;}
+.right-one {font-size: 12px;}
+.right-two {font-size: 14px;}
+.right-three {font-size: 16px;}
+.right-four {font-size: 18px;}
+.input {
+  margin: 1px;
+  border: 1px solid #ccc;
+  height: 25px;
+}
+span {
+  display: flex;
+  width: 100%;
+}
+button {
+  height: 20px;
+  line-height: 20px;
+  font-size: 14px;
+}

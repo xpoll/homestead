@@ -2,6 +2,7 @@
   "pages":[
     "pages/index/index",
     "pages/draw/draw",
+    "pages/my/draw",
     "pages/logs/logs"
   ],
   "window":{

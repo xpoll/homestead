@@ -1,57 +1,93 @@
 package cn.blmdz.home.util;
 
 import java.security.AlgorithmParameters;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.Security;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 public class AESUtil {
     public static final AESUtil instance = new AESUtil();
+    
+    public static final String AES = "AES";
+    
+    public static final String CIPHER_AES_CBC_PKCS7PADDING = "AES/CBC/PKCS7Padding";
+    
+    public static final String CIPHER_AES_EBC_PKCS7PADDING = "AES/ECB/PKCS5Padding";
 
     public static boolean initialized = false;
 
     /**
      * AES解密
      * 
-     * @param content
-     *            密文
+     * @param content 密文
+     * @param keyByte key
+     * @param ivByte 偏移
+     * @param cipherType 加密类型
      * @return
-     * @throws InvalidAlgorithmParameterException
-     * @throws NoSuchProviderException
      */
-    public byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte) throws InvalidAlgorithmParameterException {
+    public byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte, String cipherType) {
         initialize();
         try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
-            Key sKeySpec = new SecretKeySpec(keyByte, "AES");
-
-            cipher.init(Cipher.DECRYPT_MODE, sKeySpec, generateIV(ivByte));// 初始化
+            Cipher cipher = Cipher.getInstance(cipherType);
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyByte, AES), generateIV(ivByte));
             byte[] result = cipher.doFinal(content);
             return result;
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
+        }
+        return null;
+    }
+
+    /**
+     * 生成iv
+     * @param iv
+     * @return
+     * @throws Exception
+     */
+    public static AlgorithmParameters generateIV(byte[] iv) throws Exception {
+        AlgorithmParameters params = AlgorithmParameters.getInstance("AES");
+        params.init(new IvParameterSpec(iv));
+        return params;
+    }
+    /**
+     * AES解密
+     * @param content Hex.decodeHex("content".toCharArray())
+     * @param key Hex.decodeHex("key".toCharArray())
+     * @param cipherType
+     * @return
+     */
+    public byte[] decrypt(byte[] content, byte[] key, String cipherType) {
+        initialize();
+        try {
+            Cipher cipher = Cipher.getInstance(cipherType);
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, AES));
+            byte[] result = cipher.doFinal(content);
+            return result;
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * AES加密
+     * @param content "".getBytes()
+     * @param key hex
+     * @param cipherType
+     * @return
+     */
+    public String encrypt(byte[] content, byte[] key, String cipherType) {
+        initialize();
+        key = new SecretKeySpec(key, AES).getEncoded();
+        try {
+            Cipher cipher = Cipher.getInstance(cipherType);
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, AES));
+            return Hex.encodeHexString(cipher.doFinal(content));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,12 +99,5 @@ public class AESUtil {
             return;
         Security.addProvider(new BouncyCastleProvider());
         initialized = true;
-    }
-
-    // 生成iv
-    public static AlgorithmParameters generateIV(byte[] iv) throws Exception {
-        AlgorithmParameters params = AlgorithmParameters.getInstance("AES");
-        params.init(new IvParameterSpec(iv));
-        return params;
     }
 }

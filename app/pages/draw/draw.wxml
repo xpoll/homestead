@@ -24,9 +24,8 @@
 </view>
 <view>
   <button bindtap='bindMatchGame' class='user-draw'>匹配</button>
-  <view>轮到你输入：惺惺相惜</view>
   <span>
-    <input class="input" name="userName" placeholder="请输入发送内容" auto-focus/>
+    <input class="input" bindinput="bindKeyInput" confirm-type="send" maxlength="500" placeholder="请输入发送内容" auto-focus/>
     <button bindtap='bindSendChat' class='user-draw'>发送</button>
   </span>
 </view>

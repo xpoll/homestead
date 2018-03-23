@@ -31,7 +31,7 @@ Page({
       top: 0
     },
     game: {
-      drawer: true,
+      drawer: false,
       tips: '',
       answer: ''
     }
@@ -56,10 +56,12 @@ Page({
     function choose(arr, num) { for (var i = 0; i < arr.length; i++) arr[i] = (num == i); return arr }
   },
   bindMatchGame: function (event) {
+    // 游戏匹配
     this.sendSocketMessage(11, '', false)
     wx.showLoading({title: 'match...'})
   },
   bindtouchstart: function (event) {
+    // canvas 触摸开始
     if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': true })
 
@@ -74,6 +76,7 @@ Page({
     this.redraw(obj, true)
   },
   bindtouchmove: function (event) {
+    // canvas 触摸滑动
     if (!this.data.game.drawer) return
     if (this.data.cur.paint) {
 
@@ -89,14 +92,17 @@ Page({
     }
   },
   bindtouchend: function (event) {
+    // canvas 触摸结束
     if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': false })
   },
   bindtouchcancel: function (event) {
+    // canvas 触摸取消
     if (!this.data.game.drawer) return
     this.setData({ 'cur.paint': false })
   },
   resetdraw: function (send) {
+    // canvas 清除画布
     this.data.context.clearRect(0, 0, 300, 200)
     this.setData({'draw.previous': new Object()})
     this.setData({'draw.current': new Object()})
@@ -104,6 +110,7 @@ Page({
     if (send) this.sendSocketMessage(5, '', false)
   },
   redraw: function (obj, send) {
+    // canvas 涂画
     if (send) this.sendSocketMessage(1, obj, true)
 
     this.setData({'draw.previous': this.data.draw.current})
@@ -125,6 +132,7 @@ Page({
     context.draw(true)
   },
   sendSocketMessage: function (type, obj, turn) {
+    // 发送消息
     if (this.data.socketOpen) {
       wx.sendSocketMessage({
         data: JSON.stringify({'type': type, 'msg': turn ? JSON.stringify(obj) : obj})
@@ -132,6 +140,7 @@ Page({
     }
   },
   onLoad: function () {
+    // 建立连接
     var that = this
 
     if (that.data.socket == null || !that.data.socketOpen) {
@@ -165,11 +174,8 @@ Page({
     // }).exec()
     this.data.context = wx.createCanvasContext("draw")
   },
-  hideLoadingLater: function () {
-    setTimeout(function(){wx.hideLoading()},2000)
-  },
   receive: function(obj) {
-    console.info(obj)
+    // 接收消息
     var that = this
     var type = obj.type
     if (type == 1) {
@@ -197,5 +203,8 @@ Page({
       that.setData({'game.drawer': false, 'game.tips': '', 'game.answer': ''})
       that.resetdraw(false)
     }
+  },
+  bindKeyInput: function (event) {
+
   }
 })

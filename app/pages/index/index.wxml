@@ -1,11 +1,12 @@
 <!--index.wxml-->
 <view class="container">
   <view bindtap="bindViewTap" class="userinfo">
-      <image class="userinfo-avatar" src="{{userInfo.avatar}}" background-size="cover"></image>  
+      <image class="userinfo-avatar" src="{{userInfo.avatar}}" background-size="cover"></image>
     <text class="userinfo-nickname">{{userInfo.nick}}</text>
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}, {{userInfo.nick}}</text>
+    <button bindtap='bindViewDrawMatch' class='user-draw'>你画我猜</button>
     <button bindtap='bindViewDraw' class='user-draw'>绘画</button>
   </view>
 </view>

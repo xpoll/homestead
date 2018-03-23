@@ -2,8 +2,6 @@ package cn.blmdz.home.controller;
 
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,13 +109,8 @@ public class RestWechatAppletsController {
      * @return
      */
     private static WechatAppletUserInfoResponse decrypt(String key, String iv, String encryptedData) {
-        try {
-            String json = new String(AESUtil.instance.decrypt(decodeBase64(encryptedData), decodeBase64(key), decodeBase64(iv)), "UTF-8");
-            if (StringUtils.isBlank(json)) return null;
-            return JsonMapper.nonEmptyMapper().fromJson(json, WechatAppletUserInfoResponse.class);
-        } catch (UnsupportedEncodingException | InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        }
-        return null;
+        String json = new String(AESUtil.instance.decrypt(decodeBase64(encryptedData), decodeBase64(key), decodeBase64(iv), AESUtil.CIPHER_AES_CBC_PKCS7PADDING));
+        if (StringUtils.isBlank(json)) return null;
+        return JsonMapper.nonEmptyMapper().fromJson(json, WechatAppletUserInfoResponse.class);
     }
 }
