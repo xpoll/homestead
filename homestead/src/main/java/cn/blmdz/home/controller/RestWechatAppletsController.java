@@ -111,6 +111,7 @@ public class RestWechatAppletsController {
     private static WechatAppletUserInfoResponse decrypt(String key, String iv, String encryptedData) {
         String json = new String(AESUtil.instance.decrypt(decodeBase64(encryptedData), decodeBase64(key), decodeBase64(iv), AESUtil.CIPHER_AES_CBC_PKCS7PADDING));
         if (StringUtils.isBlank(json)) return null;
+        log.debug("wechat game decrypt user. info: {}", json);
         return JsonMapper.nonEmptyMapper().fromJson(json, WechatAppletUserInfoResponse.class);
     }
 }
