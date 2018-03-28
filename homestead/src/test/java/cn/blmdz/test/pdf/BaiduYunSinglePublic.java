@@ -22,17 +22,20 @@ public class BaiduYunSinglePublic {
 
     public static CloseableHttpClient httpclient;
     public static CookieStore cookieStore;
+    public static String commonurl = "https://pan.baidu.com/s/1";
+    public static String sharedownload = "https://pan.baidu.com/api/sharedownload";
+    public static String key = "gaTnzccAgInFqJlHhauVQg";
 
 	static {
 	    cookieStore = new BasicCookieStore();
 		httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-		//HttpClients.createDefault();
 	}
 
     public static void main(String[] args) throws Exception {
         
         // 单个文件公开分享
-        String url = "https://pan.baidu.com/s/1gaTnzccAgInFqJlHhauVQg"; // 分享出来的url值
+        key = key.replace(commonurl, "");
+        String url = commonurl + key;
         
         HttpGet httpGet = new HttpGet(url);
         CloseableHttpResponse response = httpclient.execute(httpGet);
@@ -49,7 +52,7 @@ public class BaiduYunSinglePublic {
             return;
         }
 
-        url = "https://pan.baidu.com/api/sharedownload?sign=" + jsonObj.getString("sign") + "&timestamp=" + jsonObj.getString("timestamp");
+        url = sharedownload + "?sign=" + jsonObj.getString("sign") + "&timestamp=" + jsonObj.getString("timestamp");
         
         HttpPost httpPost = new HttpPost(url);
         List<NameValuePair> nvps = Lists.newArrayList();

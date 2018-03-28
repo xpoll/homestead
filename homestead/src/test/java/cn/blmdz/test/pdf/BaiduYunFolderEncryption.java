@@ -25,7 +25,7 @@ import org.assertj.core.util.Lists;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Objects;
 
-public class BaiduYunSingleEncryption {
+public class BaiduYunFolderEncryption {
 
     public static CloseableHttpClient httpclient;
     public static CookieStore cookieStore;
