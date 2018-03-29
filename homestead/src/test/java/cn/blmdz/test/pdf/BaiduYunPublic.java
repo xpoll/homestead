@@ -18,7 +18,7 @@ import org.assertj.core.util.Lists;
 
 import com.alibaba.fastjson.JSONObject;
 
-public class BaiduYunSinglePublic {
+public class BaiduYunPublic {
 
     public static CloseableHttpClient httpclient;
     public static CookieStore cookieStore;
