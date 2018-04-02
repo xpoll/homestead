@@ -63,7 +63,6 @@ public class BaiduYunEncryption {
      * @throws Exception 
      */
     public static List<Long> fidLists(Long uk, Long shardId, String appId, String BAIDUID, JSONObject obj, List<Long> fid_lists) throws Exception {
-//        Thread.sleep(500);
         String url = list + "?uk="
                 + uk + "&shareid="
                 + shardId + "&order=other&desc=1&showempty=0&web=1&page=1&num=1000&dir="
@@ -132,7 +131,6 @@ public class BaiduYunEncryption {
         if (entity == null)
             return;
         resp = EntityUtils.toString(entity);
-//        System.out.println(resp);
 
         List<Long> fid_lists = Lists.newArrayList();
         String BDCLND = "BDCLND";
