@@ -16,5 +16,5 @@ public interface BaiduyunService {
      * @param pwd pwd
      * @return
      */
-    List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd);
+    List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd, Boolean encryption);
 }

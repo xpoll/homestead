@@ -1,8 +1,20 @@
 package cn.blmdz.home.baiduyun;
 
+import java.util.List;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Objects;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,5 +42,40 @@ public class BaiduyunConstant {
             log.error("js 解析 logid 失败。");
             return null;
         }
+    }
+
+    /**
+     * 文件/文件夹 列表
+     * 
+     * @throws Exception
+     */
+    public static List<Long> fidLists(Long uk, Long shardId, String appId, String BAIDUID, String key, JSONObject obj,
+            List<Long> fid_lists, CloseableHttpClient httpclient) throws Exception {
+        String url = BaiduyunConstant.list + "?uk=" + uk + "&shareid=" + shardId
+                + "&order=other&desc=1&showempty=0&web=1&page=1&num=1000&dir=" + obj.getString("path") + "&t="
+                + Math.random() + "&channel=chunlei&web=1&app_id=" + appId + "&bdstoken=null&logid=" + BaiduyunConstant.logid(BAIDUID)
+                + "&clienttype=0";
+        HttpGet httpGet = new HttpGet(url);
+        httpGet.setHeader("Referer", BaiduyunConstant.commonurl + "?surl=" + key);
+        CloseableHttpResponse response = httpclient.execute(httpGet);
+        HttpEntity entity = response.getEntity();
+        String resp = null;
+
+        if (entity == null) return fid_lists;
+        resp = EntityUtils.toString(entity);
+        log.debug("baiduyun encryption list response: {}", resp);
+
+        JSONObject jsonObj = JSONObject.parseObject(resp);
+        if (!Objects.equal(jsonObj.getInteger("errno"), Integer.valueOf(0)))
+            return fid_lists;
+        JSONArray array = jsonObj.getJSONArray("list");
+        for (int i = 0; i < array.size(); i++) {
+            fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
+            if (Objects.equal(array.getJSONObject(i).getInteger("isdir"), Integer.valueOf(1))) { // 1文件夹0文件
+                fid_lists = fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient);
+            }
+        }
+
+        return fid_lists;
     }
 }

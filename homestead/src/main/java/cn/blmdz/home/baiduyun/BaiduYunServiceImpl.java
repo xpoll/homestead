@@ -16,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -33,121 +34,88 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2018年3月29日
  */
 @Slf4j
-public class BaiduYunEncryption implements BaiduyunService {
-
-    /**
-     * 文件/文件夹 列表
-     * 
-     * @throws Exception
-     */
-    private List<Long> fidLists(Long uk, Long shardId, String appId, String BAIDUID, String key, JSONObject obj,
-            List<Long> fid_lists, CloseableHttpClient httpclient) throws Exception {
-        String url = BaiduyunConstant.list + "?uk=" + uk + "&shareid=" + shardId
-                + "&order=other&desc=1&showempty=0&web=1&page=1&num=1000&dir=" + obj.getString("path") + "&t="
-                + Math.random() + "&channel=chunlei&web=1&app_id=" + appId + "&bdstoken=null&logid=" + BaiduyunConstant.logid(BAIDUID)
-                + "&clienttype=0";
-        HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader("Referer", BaiduyunConstant.commonurl + "?surl=" + key);
-        CloseableHttpResponse response = httpclient.execute(httpGet);
-        HttpEntity entity = response.getEntity();
-        String resp = null;
-
-        if (entity == null)
-            return fid_lists;
-        resp = EntityUtils.toString(entity);
-
-        log.debug("baiduyun encryption list response: {}", resp);
-
-        JSONObject jsonObj = JSONObject.parseObject(resp);
-        if (!Objects.equal(jsonObj.getInteger("errno"), Integer.valueOf(0)))
-            return fid_lists;
-        JSONArray array = jsonObj.getJSONArray("list");
-        for (int i = 0; i < array.size(); i++) {
-            fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
-            if (Objects.equal(array.getJSONObject(i).getInteger("isdir"), Integer.valueOf(1))) { // 1文件夹0文件
-                fid_lists = fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient);
-            }
-        }
-
-        return fid_lists;
-    }
+@Service
+public class BaiduYunServiceImpl implements BaiduyunService {
 
     @Override
-    public List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd) {
+    public List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd, Boolean encryption) {
 
         CookieStore cookieStore = new BasicCookieStore();
-        CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();;
+        CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+        String url = null;
+        HttpPost httpPost = null;
+        HttpGet httpGet = null;
+        List<NameValuePair> nvps = null;
+        CloseableHttpResponse response = null;
+        HttpEntity entity = null;
+        String resp = null;
+        JSONObject jsonObj = null;
+        Long shardId = null;
+        Long uk = null;
+        List<Long> fid_lists = Lists.newArrayList();
+        String BDCLND = BaiduyunConstant.BDCLND;
+        String BAIDUID = BaiduyunConstant.BAIDUID;
+        String appId = BaiduyunConstant.appId;
         try {
 
             key = key.replace(BaiduyunConstant.commonurl, "");
-
-            String url = BaiduyunConstant.verify + "?surl=" + key + "&t=" + System.currentTimeMillis()
-                    + "&channel=chunlei&web=1&clienttype=0";
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.setHeader("Referer", BaiduyunConstant.init + "?surl=" + key);
-            List<NameValuePair> nvps = Lists.newArrayList();
-            nvps.add(new BasicNameValuePair("pwd", pwd));
-            httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
-            CloseableHttpResponse response = httpclient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
-            String resp = null;
-
-            if (entity == null)
-                throw new WebJspException("verify返回为空。");
-            resp = EntityUtils.toString(entity);
-
-            log.debug("baiduyun encryption verify response: {}", resp);
-
-            JSONObject jsonObj = JSONObject.parseObject(resp);
-            if (Objects.equal(jsonObj.getInteger("errno"), Integer.valueOf(0))) {
-                log.debug("baiduyun encryption pwd check {}", true);
-            } else {
-                log.debug("baiduyun encryption pwd check {}", false);
-                throw new WebJspException("密码不正确。");
-            }
+            // 加密需要先登录
+            if (encryption) {
+	            url = BaiduyunConstant.verify + "?surl=" + key + "&t=" + System.currentTimeMillis() + "&channel=chunlei&web=1&clienttype=0";
+	            httpPost = new HttpPost(url);
+	            httpPost.setHeader("Referer", BaiduyunConstant.init + "?surl=" + key);
+	            nvps = Lists.newArrayList();
+	            nvps.add(new BasicNameValuePair("pwd", pwd));
+	            httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+	            response = httpclient.execute(httpPost);
+	            entity = response.getEntity();
+	
+	            if (entity == null) throw new WebJspException("verify返回为空。");
+	            resp = EntityUtils.toString(entity);
+	            log.debug("baiduyun encryption verify response: {}", resp);
+	
+	            jsonObj = JSONObject.parseObject(resp);
+	            if (Objects.equal(jsonObj.getInteger("errno"), Integer.valueOf(0))) {
+	                log.debug("baiduyun encryption pwd check {}", true);
+	            } else {
+	                log.debug("baiduyun encryption pwd check {}", false);
+	                throw new WebJspException("密码不正确。");
+	            }
+        	}
             url = BaiduyunConstant.commonurl + key;
 
-            HttpGet httpGet = new HttpGet(url);
+            httpGet = new HttpGet(url);
             response = httpclient.execute(httpGet);
             entity = response.getEntity();
 
-            if (entity == null)
-                throw new WebJspException("commonurl返回为空。");
+            if (entity == null) throw new WebJspException("commonurl返回为空。");
             resp = EntityUtils.toString(entity);
-
             log.debug("baiduyun encryption commonurl response: {}", resp);
-
-            List<Long> fid_lists = Lists.newArrayList();
-            String BDCLND = BaiduyunConstant.BDCLND;
-            String BAIDUID = BaiduyunConstant.BAIDUID;
-            String appId = BaiduyunConstant.appId;
 
             try {
                 String data = resp.split("yunData.setData\\(")[1].split("\\);")[0];
                 log.debug("baiduyun encryption yunData: {}", data);
                 jsonObj = JSONObject.parseObject(data);
+                shardId = jsonObj.getLong("shareid");
+                uk = jsonObj.getLong("uk");
             } catch (Exception e) {
                 throw new WebJspException("解析页面有误。");
             }
-            Long shardId = jsonObj.getLong("shareid");
-            Long uk = jsonObj.getLong("uk");
+            for (Cookie cookie : cookieStore.getCookies()) {
+            	if (Objects.equal(BDCLND, cookie.getName())) {
+            		BDCLND = URLDecoder.decode(cookie.getValue(), "UTF-8");
+            	}
+            	if (Objects.equal(BAIDUID, cookie.getName())) {
+            		BAIDUID = cookie.getValue();
+            	}
+            }
             try {
-
-                for (Cookie cookie : cookieStore.getCookies()) {
-                    if (Objects.equal(BDCLND, cookie.getName())) {
-                        BDCLND = URLDecoder.decode(cookie.getValue(), "UTF-8");
-                    }
-                    if (Objects.equal(BAIDUID, cookie.getName())) {
-                        BAIDUID = cookie.getValue();
-                    }
-                }
-
                 JSONArray array = jsonObj.getJSONObject("file_list").getJSONArray("list");
                 appId = array.getJSONObject(0).getString("app_id");
                 for (int i = 0; i < array.size(); i++) {
                     fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
                     if (Objects.equal(array.getJSONObject(i).getInteger("isdir"), Integer.valueOf(1))) { // 1文件夹0文件
-                        fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient);
+                    	BaiduyunConstant.fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient);
                     }
                 }
             } catch (Exception e) {
@@ -157,7 +125,7 @@ public class BaiduYunEncryption implements BaiduyunService {
             url = BaiduyunConstant.sharedownload + "?sign=" + jsonObj.getString("sign") + "&timestamp="
                     + jsonObj.getString("timestamp") + "&channel=chunlei&web=1&app_id=" + appId + "&bdstoken="
                     + jsonObj.getString("bdstoken") + "&logid=" + BaiduyunConstant.logid(BAIDUID) + "&clienttype=0";
-
+            // 非加密只需要sign和timestamp两个参数就行，但多余参数不影响
             httpPost = new HttpPost(url);
             httpPost.setHeader("Referer", BaiduyunConstant.commonurl + key);
             nvps = Lists.newArrayList();
@@ -171,8 +139,7 @@ public class BaiduYunEncryption implements BaiduyunService {
             response = httpclient.execute(httpPost);
             entity = response.getEntity();
 
-            if (entity == null)
-                throw new WebJspException("sharedownload返回为空。");
+            if (entity == null) throw new WebJspException("sharedownload返回为空。");
             resp = EntityUtils.toString(entity);
             log.debug("baiduyun encryption sharedownload response: {}", resp);
 

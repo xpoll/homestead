@@ -13,9 +13,9 @@ public class BaiduyunMainTest {
 //        List<BaiduyunFileInfo> list = ccc.getFileInfo(null, key, pwd);
 //        System.out.println(JSON.toJSONString(list));
         
-        String key = "https://pan.baidu.com/s/1p-qeiXVK-vmPiiNRYpcI1g";
-        BaiduYunPublic ccc = new BaiduYunPublic();
-        List<BaiduyunFileInfo> list = ccc.getFileInfo(null, key, null);
+        String key = "https://pan.baidu.com/s/14fo5FWeNfpa8CXZk8v9EUA";
+        BaiduYunServiceImpl ccc = new BaiduYunServiceImpl();
+        List<BaiduyunFileInfo> list = ccc.getFileInfo(null, key, null, false);
         System.out.println(JSON.toJSONString(list));
     }
 }
