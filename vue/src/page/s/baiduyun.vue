@@ -148,7 +148,7 @@
           pwd: null
         },
         rulesVo: {
-          name: [{ validator: validateName, trigger: 'blur' }],
+          key: [{ validator: validateName, trigger: 'blur' }],
           pwd: [{ validator: validatePwd, trigger: 'blur' }]
         },
         error: null
