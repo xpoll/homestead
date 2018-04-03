@@ -67,8 +67,8 @@
 
       return {
         formLogin: {
-          name: '18224524752',
-          pwd: 'blmdz521'
+          name: null,
+          pwd: null
         },
         rulesLogin: {
           name: [{ validator: validateName, trigger: 'blur' }],

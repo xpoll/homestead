@@ -19,6 +19,8 @@ import draw from '@/page/draw/index.vue'
 
 import bs from '@/page/bs/index.vue'
 
+import s from '@/page/s/baiduyun.vue'
+
 export default [
   {
     path: '/',
@@ -72,6 +74,10 @@ export default [
   {
     path: '/bs',
     component: bs
+  },
+  {
+    path: '/s',
+    component: s
   },
   {
     path: '*',

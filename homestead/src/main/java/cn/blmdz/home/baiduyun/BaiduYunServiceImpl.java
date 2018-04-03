@@ -119,6 +119,7 @@ public class BaiduYunServiceImpl implements BaiduyunService {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new WebJspException("获取分享失败或用户取消分享了。");
             }
 
@@ -163,7 +164,7 @@ public class BaiduYunServiceImpl implements BaiduyunService {
                 return fileInfos;
 
             } else if (Objects.equal(jsonObj.getInteger("errno"), Integer.valueOf(-20))) {
-                throw new WebJspException("悲剧，验证码，系统暂时没有研究验证码识别功能。");
+                throw new WebJspException("悲剧，请求次数过多，出现验证码，系统暂时没有研究验证码识别功能。");
             } else {
                 throw new WebJspException("悲剧，返回系统未处理的错误。代码为" + jsonObj.getInteger("errno"));
             }

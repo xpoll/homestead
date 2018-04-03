@@ -1,5 +1,6 @@
 package cn.blmdz.home.baiduyun;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.script.Invocable;
@@ -52,7 +53,7 @@ public class BaiduyunConstant {
     public static List<Long> fidLists(Long uk, Long shardId, String appId, String BAIDUID, String key, JSONObject obj,
             List<Long> fid_lists, CloseableHttpClient httpclient) throws Exception {
         String url = BaiduyunConstant.list + "?uk=" + uk + "&shareid=" + shardId
-                + "&order=other&desc=1&showempty=0&web=1&page=1&num=1000&dir=" + obj.getString("path") + "&t="
+                + "&order=other&desc=1&showempty=0&web=1&page=1&num=1000&dir=" + URLEncoder.encode(obj.getString("path"), "UTF-8") + "&t="
                 + Math.random() + "&channel=chunlei&web=1&app_id=" + appId + "&bdstoken=null&logid=" + BaiduyunConstant.logid(BAIDUID)
                 + "&clienttype=0";
         HttpGet httpGet = new HttpGet(url);
