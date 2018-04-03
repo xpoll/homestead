@@ -11,14 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.eventbus.AsyncEventBus;
-
 import cn.blmdz.home.base.BasePage;
 import cn.blmdz.home.base.BaseUser;
 import cn.blmdz.home.base.Response;
-import cn.blmdz.home.event.TalkForwardEvent;
 import cn.blmdz.home.model.search.TalkSearch;
-import cn.blmdz.home.model.valid.TalkForwardValid;
 import cn.blmdz.home.model.valid.TalkReplyValid;
 import cn.blmdz.home.model.valid.TalkValid;
 import cn.blmdz.home.model.vo.TalkVo;
@@ -36,8 +32,6 @@ public class RestTalkController {
     private TalkManager talkManager;
 
     @Autowired
-    private AsyncEventBus eventBus;
-    @Autowired
     private TalkCache talkCache;
     
 
@@ -47,19 +41,6 @@ public class RestTalkController {
         if (baseUser == null) return Response.build(null);
         
         talkService.issue(baseUser.getId(), talkValid);
-        
-        return Response.ok();
-    }
-    
-
-    @RequestMapping(value="forward", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
-    public Response<Boolean> forward(HttpServletRequest request, @Valid @RequestBody TalkForwardValid talkForwardValid) {
-
-        BaseUser baseUser = (BaseUser) request.getSession().getAttribute("user");
-        if (baseUser == null) return Response.build(null);
-        
-        Long talkId = talkService.forward(baseUser.getId(), talkForwardValid);
-        eventBus.post(new TalkForwardEvent(talkForwardValid.getTalkId(), talkId, 0L));
         
         return Response.ok();
     }

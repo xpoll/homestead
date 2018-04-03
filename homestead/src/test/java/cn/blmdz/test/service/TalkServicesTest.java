@@ -14,7 +14,6 @@ import cn.blmdz.home.HomesteadApplication;
 import cn.blmdz.home.base.BasePage;
 import cn.blmdz.home.enums.EnumsPrivacy;
 import cn.blmdz.home.model.Talk;
-import cn.blmdz.home.model.TalkForward;
 import cn.blmdz.home.model.TalkReply;
 import cn.blmdz.home.model.search.TalkSearch;
 import cn.blmdz.home.model.valid.TalkForwardValid;
@@ -94,13 +93,13 @@ public class TalkServicesTest {
 	    for (Talk talk : tsearch.getData()) {
             System.out.println(talk);
         }
-	    // 查看转发分页
-	    BasePage<Long, TalkForward> search = new BasePage<>();
-	    search.setMode(1L);
-	    search = talkService.pageTalkForwardBySelect(search);
-        for (TalkForward talkForward : search.getData()) {
-            System.out.println(talkForward);
-        }
+//	    // 查看转发分页
+//	    BasePage<Long, TalkForward> search = new BasePage<>();
+//	    search.setMode(1L);
+//	    search = talkService.pageTalkForwardBySelect(search);
+//        for (TalkForward talkForward : search.getData()) {
+//            System.out.println(talkForward);
+//        }
         // 查看转发评论赞个数
         // 查看评论
         List<TalkReply> talkReplys = talkService.talkReplyBySelect(1L);

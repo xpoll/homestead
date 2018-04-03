@@ -147,7 +147,7 @@ public class SocketManagers implements SocketManager {
 /**
  * 匹配分配房间
  */
-@Slf4j
+//@Slf4j
 class GameAllocationThread extends Thread {
 
     @Override
@@ -157,7 +157,7 @@ class GameAllocationThread extends Thread {
 				GameAllocationThread.sleep(5000L);
 			} catch (InterruptedException e) {
 			}
-            log.info("all user: {}, game wait user: {}", SocketManagers.allUsers.keySet(), SocketManagers.gameWaitUsers);
+//            log.info("all user: {}, game wait user: {}", SocketManagers.allUsers.keySet(), SocketManagers.gameWaitUsers);
             if (SocketManagers.gameWaitUsers.size() < SocketManagers.gameUserNum) continue;
             
             int times = SocketManagers.gameWaitUsers.size()/SocketManagers.gameUserNum;
