@@ -32,8 +32,8 @@ public class PrintTextLocations extends PDFTextStripper {
             PrintTextLocations printer = new PrintTextLocations();
             printer.getText(document);
             System.out.println(set.toString());
-            for (int i = 0; i < document.getNumberOfPages(); i++) {
-                ImageIO.write(new PDFRenderer(document).renderImageWithDPI(i, 250, ImageType.RGB), "jpg", new FileOutputStream(new File("c:/xxx" + i +".jpg")));
+            for (int i = 0; i < 5; i++) {
+                ImageIO.write(new PDFRenderer(document).renderImageWithDPI(i, 120, ImageType.RGB), "jpg", new FileOutputStream(new File("c:/xxx" + i +".jpg")));
             }
 
         } finally {

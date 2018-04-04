@@ -18,5 +18,6 @@ public class OtherProperties {
         private String accessKey;
         private String accessSecret;
         private String bucketName;
+        private String imgDomain;
     }
 }

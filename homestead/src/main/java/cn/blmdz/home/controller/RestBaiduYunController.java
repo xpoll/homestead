@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.collect.Sets;
+
 import cn.blmdz.home.baiduyun.BaiduyunFileInfo;
 import cn.blmdz.home.baiduyun.BaiduyunRequestVo;
 import cn.blmdz.home.baiduyun.BaiduyunService;
@@ -33,7 +35,7 @@ public class RestBaiduYunController {
     	log.info("baiduyun vo :{}", vo);
     	if (vo.getEncryption() && StringUtils.isBlank(vo.getPwd())) throw new WebJspException("请输入密码");
         
-        return Response.build(baiduyunService.getFileInfo(vo.getId(), vo.getKey(), vo.getPwd(), vo.getEncryption()));
+        return Response.build(baiduyunService.getFileInfo(vo.getId(), vo.getKey(), vo.getPwd(), vo.getEncryption(), Sets.newHashSet(), true));
     }
     
 }

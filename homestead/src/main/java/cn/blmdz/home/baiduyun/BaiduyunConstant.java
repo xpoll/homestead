@@ -51,7 +51,8 @@ public class BaiduyunConstant {
      * @throws Exception
      */
     public static List<Long> fidLists(Long uk, Long shardId, String appId, String BAIDUID, String key, JSONObject obj,
-            List<Long> fid_lists, CloseableHttpClient httpclient) throws Exception {
+            List<Long> fid_lists, CloseableHttpClient httpclient, Boolean filterFoloder) throws Exception {
+        if (!filterFoloder) fid_lists.add(obj.getLong("fs_id"));
         String url = BaiduyunConstant.list + "?uk=" + uk + "&shareid=" + shardId
                 + "&order=other&desc=1&showempty=0&web=1&page=1&num=1000&dir=" + URLEncoder.encode(obj.getString("path"), "UTF-8") + "&t="
                 + Math.random() + "&channel=chunlei&web=1&app_id=" + appId + "&bdstoken=null&logid=" + BaiduyunConstant.logid(BAIDUID)
@@ -71,9 +72,10 @@ public class BaiduyunConstant {
             return fid_lists;
         JSONArray array = jsonObj.getJSONArray("list");
         for (int i = 0; i < array.size(); i++) {
-            fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
             if (Objects.equal(array.getJSONObject(i).getInteger("isdir"), Integer.valueOf(1))) { // 1文件夹0文件
-                fid_lists = fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient);
+                fid_lists = fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient, filterFoloder);
+            } else {
+                fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
             }
         }
 

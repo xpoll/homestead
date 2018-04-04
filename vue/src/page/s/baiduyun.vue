@@ -144,7 +144,7 @@
         tableData: null,
         formVo: {
           encryption: false,
-          key: '4fo5FWeNfpa8CXZk8v9EUA',
+          key: null,
           pwd: null
         },
         rulesVo: {

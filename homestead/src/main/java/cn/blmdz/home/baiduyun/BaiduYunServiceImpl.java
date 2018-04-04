@@ -2,6 +2,7 @@ package cn.blmdz.home.baiduyun;
 
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -36,9 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class BaiduYunServiceImpl implements BaiduyunService {
-
+    
     @Override
-    public List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd, Boolean encryption) {
+    public List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd, Boolean encryption, Set<Long> fsids, Boolean filterFoloder) {
 
         CookieStore cookieStore = new BasicCookieStore();
         CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
@@ -113,15 +114,17 @@ public class BaiduYunServiceImpl implements BaiduyunService {
                 JSONArray array = jsonObj.getJSONObject("file_list").getJSONArray("list");
                 appId = array.getJSONObject(0).getString("app_id");
                 for (int i = 0; i < array.size(); i++) {
-                    fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
                     if (Objects.equal(array.getJSONObject(i).getInteger("isdir"), Integer.valueOf(1))) { // 1文件夹0文件
-                    	BaiduyunConstant.fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient);
+                    	BaiduyunConstant.fidLists(uk, shardId, appId, BAIDUID, key, array.getJSONObject(i), fid_lists, httpclient, filterFoloder);
+                    } else {
+                        fid_lists.add(array.getJSONObject(i).getLong("fs_id"));
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new WebJspException("获取分享失败或用户取消分享了。");
             }
+            fid_lists.removeAll(fsids); // 移除过滤列表
 
             url = BaiduyunConstant.sharedownload + "?sign=" + jsonObj.getString("sign") + "&timestamp="
                     + jsonObj.getString("timestamp") + "&channel=chunlei&web=1&app_id=" + appId + "&bdstoken="

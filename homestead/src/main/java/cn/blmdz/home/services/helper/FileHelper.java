@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 
-import cn.blmdz.aide.file.ImageServer;
+import cn.blmdz.aide.file.FileServer;
 import cn.blmdz.aide.file.util.FUtil;
 import cn.blmdz.home.dao.UserFileDao;
 import cn.blmdz.home.enums.FileType;
@@ -43,7 +43,7 @@ public class FileHelper {
     public final static Set<String> ALLOWED_CONTENT_TYPES = ImmutableSet.of("image/bmp","image/png","image/gif","image/jpg","image/jpeg","image/pjpeg");
 
     @Autowired
-    private ImageServer imageServer;
+    private FileServer fileServer;
     @Autowired
     private UserFileDao userFileDao;
     
@@ -112,7 +112,7 @@ public class FileHelper {
             image.setMd5(find.getMd5());
         } else {
             
-            String filePath = imageServer.write("home" +"/" + FileUtil.newFileName(file.getOriginalFilename()), file);
+            String filePath = fileServer.write("home" +"/" + FileUtil.newFileName(file.getOriginalFilename()), file);
             boolean isSucceed = !Strings.isNullOrEmpty(filePath);
             if (!isSucceed) {
                 log.error("write file(name={}) of user(id={}) to image server failed", file.getOriginalFilename(), image.getUserId());
@@ -155,7 +155,7 @@ public class FileHelper {
         if (file == null || !Objects.equals(file.getUserId(), userId)) throw new WebJspException("文件不存在");
         if (Objects.isNull(file.getMd5()) || userFileDao.countByMD5(file.getMd5()) == 1) {
             try {
-                imageServer.delete(file.getPath());
+                fileServer.delete(file.getPath());
             } catch (Exception e) {
                 throw new WebJspException("文件删除失败");
             }

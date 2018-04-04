@@ -1,6 +1,7 @@
 package cn.blmdz.home.baiduyun;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 百度云实际链接下载地址
@@ -14,7 +15,8 @@ public interface BaiduyunService {
      * @param id Cookie BAIDUID
      * @param key key
      * @param pwd pwd
+     * @param encryption encryption
      * @return
      */
-    List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd, Boolean encryption);
+    List<BaiduyunFileInfo> getFileInfo(String id, String key, String pwd, Boolean encryption, Set<Long> filterFsids, Boolean filterFoloder);
 }

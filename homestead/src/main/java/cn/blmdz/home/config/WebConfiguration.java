@@ -18,8 +18,8 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 
-import cn.blmdz.aide.file.ImageServer;
-import cn.blmdz.aide.file.aliyun.AliyunImageServer;
+import cn.blmdz.aide.file.FileServer;
+import cn.blmdz.aide.file.qiniu.QiniuFileServer;
 import cn.blmdz.home.properties.OtherProperties;
 
 /**
@@ -54,13 +54,19 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
      * @return
      */
     @Bean
-    public ImageServer imageServer() {
-
-        return new AliyunImageServer(
+    public FileServer fileServer() {
+        
+        return new QiniuFileServer(
                 properties.getOos().getEndpoint(),
                 properties.getOos().getAccessKey(),
                 properties.getOos().getAccessSecret(),
                 properties.getOos().getBucketName());
+
+//        return new AliyunImageServer(
+//                properties.getOos().getEndpoint(),
+//                properties.getOos().getAccessKey(),
+//                properties.getOos().getAccessSecret(),
+//                properties.getOos().getBucketName());
     }
     
 	/**

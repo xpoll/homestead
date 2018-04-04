@@ -1,4 +1,4 @@
-package cn.blmdz.test.dtalk;
+package cn.blmdz.home.dtalk;
 
 import java.util.List;
 
@@ -6,9 +6,6 @@ import com.github.kevinsawicki.http.HttpRequest;
 import com.google.common.collect.Lists;
 
 import cn.blmdz.home.util.JsonMapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class Rebot {
 
@@ -27,7 +24,11 @@ public class Rebot {
 		text(text);
         RebotLink link = new RebotLink("啦啦啦(～￣▽￣～", "我是卖报的小行家，O(∩_∩)O哈哈~", null, "http://blmdz.xyz");
 		link(link);
-        RebotMarkdown markdown = new RebotMarkdown("啦啦啦(～￣▽￣～", "#### 杭州天气\n> 9度，西北风1级，空气良89，相对温度73%\n\n> ![screenshot](http://xpoll.blmdz.cn/img/call-to-action-bg.jpg)\n> ###### 10点20分发布 [天气](http://www.thinkpage.cn/) \n");
+        RebotMarkdown markdown = new RebotMarkdown("啦啦啦(～￣▽￣～",
+                "#### 杭州天气\n"
+                + "> 9度，西北风1级，空气良89，相对温度73%\n\n"
+                + "> ![screenshot](http://xpoll.blmdz.cn/img/call-to-action-bg.jpg)\n"
+                + "> ###### 10点20分发布 [天气](http://www.thinkpage.cn/) \n");
 		markdown(markdown);
 	}
 	
@@ -42,14 +43,14 @@ public class Rebot {
 	 * link类型
 	 */
 	public static void link(RebotLink link) {
-		post(JsonMapper.nonDefaultMapper().toJson(new RebotMsg(RebotType.text, null, link, null, null)));
+		post(JsonMapper.nonDefaultMapper().toJson(new RebotMsg(RebotType.link, null, link, null, null)));
 	}
 	
 	/**
 	 * markdown类型
 	 */
 	public static void markdown(RebotMarkdown markdown) {
-		post(JsonMapper.nonDefaultMapper().toJson(new RebotMsg(RebotType.text, null, null, markdown, null)));
+		post(JsonMapper.nonDefaultMapper().toJson(new RebotMsg(RebotType.markdown, null, null, markdown, null)));
 	}
 	
 	/**
@@ -63,60 +64,7 @@ public class Rebot {
 		HttpRequest request = HttpRequest.post(urls.get((int) (urls.size() * Math.random())));
 		request.header(HttpRequest.HEADER_CONTENT_TYPE, HttpRequest.CONTENT_TYPE_JSON);
 		request.send(msg);
-		System.out.println(request.ok());
-		System.out.println(request.body());
-		
+		request.ok();
 	}
 
-}
-
-enum RebotType {
-	text, link, markdown, actionCard;
-}
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class RebotMsg {
-	private RebotType msgtype;
-	private RebotText text;
-	private RebotLink link;
-	private RebotMarkdown markdown;
-	private RebotAt at;
-}
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class RebotText {
-	private String content;
-}
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class RebotLink {
-	private String title;
-	private String text;
-	private String priUrl;
-	private String messageUrl;
-}
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class RebotMarkdown {
-	private String title;
-	private String text;
-}
-
-/**
- * RebotType.text/markdown
- */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class RebotAt {
-	private List<String> atMobiles; // 手机号
-	private Boolean isAtAll = Boolean.FALSE.booleanValue();
 }
