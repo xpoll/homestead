@@ -3,8 +3,9 @@ package cn.blmdz.home.enums;
 public enum EnumsBaseDataType {
     
     SIGN(1, "签到"),
-    F_H_Z_K(2, "凤凰周刊"),
-    F_H_Z_K_KV(3, "凤凰周刊-拉去key-value");
+    F_H_Z_K(2, "凤凰周刊-历史去重"),
+    F_H_Z_K_KV(3, "凤凰周刊-拉取key-value"),
+    F_H_Z_K_C(4, "凤凰周刊-栏目");
     
     private final int value;
     private final String desc;

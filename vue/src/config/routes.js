@@ -21,6 +21,7 @@ import bs from '@/page/bs/index.vue'
 
 import s from '@/page/s/baiduyun.vue'
 
+
 export default [
   {
     path: '/',
@@ -38,31 +39,31 @@ export default [
     path: '/register',
     component: register
   },
-  {
-    path: '/user',
-    component: Frame,
-    children: [
-      {path: '', component: userNew},
-      {path: 'user', component: user},
-      {path: 'info', component: userInfo}
-    ]
-  },
-  {
-    path: '/talk',
-    component: Frame,
-    children: [
-      {path: '', component: talk}
-    ]
-  },
-  {
-    path: '/o',
-    component: Frame,
-    children: [
-      // {path: '', component: user},
-      {path: ':id', component: otherIndex},
-      {path: 't/:id', component: otherTalk}
-    ]
-  },
+  // {
+  //   path: '/user',
+  //   component: Frame,
+  //   children: [
+  //     {path: '', component: userNew},
+  //     {path: 'user', component: user},
+  //     {path: 'info', component: userInfo}
+  //   ]
+  // },
+  // {
+  //   path: '/talk',
+  //   component: Frame,
+  //   children: [
+  //     {path: '', component: talk}
+  //   ]
+  // },
+  // {
+  //   path: '/o',
+  //   component: Frame,
+  //   children: [
+  //     // {path: '', component: user},
+  //     {path: ':id', component: otherIndex},
+  //     {path: 't/:id', component: otherTalk}
+  //   ]
+  // },
   {
     path: '/file',
     component: file
@@ -71,10 +72,10 @@ export default [
     path: '/draw',
     component: draw
   },
-  {
-    path: '/bs',
-    component: bs
-  },
+  // {
+  //   path: '/bs',
+  //   component: bs
+  // },
   {
     path: '/s',
     component: s

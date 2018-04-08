@@ -95,7 +95,7 @@
           if (!r.data.success) {
             v.error = r.data.message
           } else {
-            v.$router.push({ path: '/user' })
+            v.$router.push({ path: '/' })
           }
         })
         .catch(error => {
