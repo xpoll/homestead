@@ -1,7 +1,6 @@
 <template>
   <div class="qxx_baiduyun">
-    <!-- <xpollHeader></xpollHeader> --><!--
-   -->
+    <xpollHeader></xpollHeader>
     <el-alert
     title="tips:"
     type="success"
