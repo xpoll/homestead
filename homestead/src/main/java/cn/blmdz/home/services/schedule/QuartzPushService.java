@@ -25,10 +25,11 @@ import cn.blmdz.aide.file.FileServer;
 import cn.blmdz.home.baiduyun.BaiduyunFileInfo;
 import cn.blmdz.home.baiduyun.BaiduyunService;
 import cn.blmdz.home.dao.BaseDataDao;
-import cn.blmdz.home.dtalk.Rebot;
-import cn.blmdz.home.dtalk.RebotMarkdown;
+import cn.blmdz.home.dao.WeeklyDao;
 import cn.blmdz.home.enums.EnumsBaseDataType;
+import cn.blmdz.home.enums.EnumsWeekly;
 import cn.blmdz.home.model.BaseData;
+import cn.blmdz.home.model.Weekly;
 import cn.blmdz.home.properties.OtherProperties;
 import cn.blmdz.home.util.JsonMapper;
 import cn.blmdz.home.util.PrintTextLocations;
@@ -44,6 +45,8 @@ public class QuartzPushService {
     private FileServer fileServer;
     @Autowired
     private OtherProperties properties;
+    @Autowired
+    private WeeklyDao weeklyDao;
 
     private static JsonMapper mapper;
 
@@ -52,7 +55,7 @@ public class QuartzPushService {
     }
 
     //@Scheduled(cron = "0/1 * * * * ?")
-    @Scheduled(cron = "0 0 23 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void doing() throws Exception {
         BaseData base = baseDataDao.findByType(EnumsBaseDataType.F_H_Z_K.value());
         Set<Long> set = mapper.fromJson(base.getDataJson(), mapper.createCollectionType(Set.class, Long.class));
@@ -63,8 +66,11 @@ public class QuartzPushService {
         System.out.println(num);
         System.out.println(mapper.toJson(fileInfos));
         for (BaiduyunFileInfo fileInfo : fileInfos) {
+        	Weekly weekly = weeklyDao.findByFsid(fileInfo.getFsId());
+        	if (weekly != null) continue;
             try {
                 PDDocument document = null;
+                weekly = new Weekly();
 
                 List<String> lists = Lists.newArrayList();
                 try {
@@ -89,6 +95,12 @@ public class QuartzPushService {
                         System.out.println("上传图片完成：" + fileName);
                         lists.add(properties.getOos().getImgDomain() + "/" + fileName);
                     }
+                    weekly.setCategory(EnumsWeekly.W_DEFAULT.value());
+                    weekly.setFsid(fileInfo.getFsId());
+                    weekly.setStart(0);
+                    weekly.setEnd(document.getNumberOfPages());
+                    weekly.setName(fileInfo.getName());
+                    weeklyDao.create(weekly);
                     System.out.println("解析文件完成：" + fileInfo.getName());
                 } finally {
                     if (document != null) {
@@ -101,10 +113,10 @@ public class QuartzPushService {
                     sb.append("> ![screenshot](").append(url).append(")\n");
                 }
                 sb.append("> ###### [下载链接有效期8小时](").append(fileInfo.getLink()).append(") \n");
-                System.out.println("推送请求：" + fileInfo.getName());
-                Rebot.markdown(new RebotMarkdown(
-                        EnumsBaseDataType.F_H_Z_K.desc() + ": " + fileInfo.getName().split("\\.")[0], sb.toString()));
-                System.out.println("推送完成：" + fileInfo.getName());
+//                System.out.println("推送请求：" + fileInfo.getName());
+//                Rebot.markdown(new RebotMarkdown(
+//                        EnumsBaseDataType.F_H_Z_K.desc() + ": " + fileInfo.getName().split("\\.")[0], sb.toString()));
+//                System.out.println("推送完成：" + fileInfo.getName());
                 set.add(fileInfo.getFsId());
             } catch (Exception e) {
                 e.printStackTrace();

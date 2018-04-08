@@ -27,6 +27,15 @@ public enum EnumsWeekly {
     public final String desc() {
         return desc;
     }
+
+    public static EnumsWeekly from(Integer value) {
+        for (EnumsWeekly item : values()) {
+            if (Integer.valueOf(item.value).equals(value)) {
+                return item;
+            }
+        }
+        return W_DEFAULT;
+    }
     
     EnumsWeekly(int value, String desc) {
         this.value = value;

@@ -18,7 +18,7 @@ public class Weekly {
 
     private Long id;
     private Integer category;// 类目ID
-    private String fsid;// 百度云文件序号
+    private Long fsid;// 百度云文件序号
     private String name;// 名称
     private Integer start;// 页码起始
     private Integer end;// 页码结束

@@ -32,7 +32,7 @@
 	</sql>
 
 	<sql id="tb">
-		tb_user
+		tb_weekly
 	</sql>
 
 	<insert id="create" useGeneratedKeys="true" keyProperty="id" parameterType="cn.blmdz.home.model.Weekly">
@@ -62,7 +62,7 @@
 		update
 	    <include refid="tb"/>
 		<set>
-			<if test="column_id != null">category = #{category},</if>
+			<if test="category != null">category = #{category},</if>
 			<if test="name != null">name = #{name},</if>
 			<if test="start != null">start = #{start},</if>
 			<if test="end != null">end = #{end},</if>
@@ -95,6 +95,15 @@
         <include refid="cloums_all" />
         from <include refid="tb" />
         where status = true
-        and category = #{type}
+        and category = #{category}
     </select>
+
+    <select id="findByFsid" resultMap="BaseResultMap">
+        select
+        <include refid="cloums_all" />
+        from <include refid="tb" />
+        where status = true
+        and fsid = #{fsid}
+    </select>
+    
 </mapper>

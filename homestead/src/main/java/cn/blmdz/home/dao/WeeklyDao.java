@@ -8,5 +8,7 @@ import cn.blmdz.home.model.Weekly;
 
 public interface WeeklyDao extends BaseDao<Weekly> {
 
-    List<Weekly> findByType(@Param("type") Integer type);
+    List<Weekly> findByType(@Param("category") Integer category);
+    
+    Weekly findByFsid(@Param("fsid") Long fsid);
 }

@@ -2,9 +2,10 @@ package cn.blmdz.home.services.service.impl;
 
 import java.util.List;
 
-import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Lists;
 
 import cn.blmdz.home.base.BaseVo;
 import cn.blmdz.home.dao.WeeklyDao;
