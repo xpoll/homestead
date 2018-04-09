@@ -17,6 +17,7 @@ import lombok.Data;
 public class Weekly {
 
     private Long id;
+    @JsonIgnore
     private Integer category;// 类目ID
     private Long fsid;// 百度云文件序号
     private String name;// 名称
@@ -26,6 +27,6 @@ public class Weekly {
     private Boolean status;//状态(0不可用1可用)
     @JsonFormat(pattern = Constants.YH, timezone = Constants.TIMEZONE)
     private Date createTime;//创建时间
-    @JsonFormat(pattern = Constants.YH, timezone = Constants.TIMEZONE)
+    @JsonIgnore
     private Date updateTime;//更新时间
 }

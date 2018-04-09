@@ -19,7 +19,13 @@ import draw from '@/page/draw/index.vue'
 
 import bs from '@/page/bs/index.vue'
 
-import s from '@/page/s/baiduyun.vue'
+import s from '@/page/baiduyun/baiduyun.vue'
+
+import w from '@/page/weekly/show.vue'
+
+import wl from '@/page/weekly/list.vue'
+
+import wlc from '@/page/weekly/content.vue'
 
 
 export default [
@@ -38,6 +44,15 @@ export default [
   {
     path: '/register',
     component: register
+  },
+  {
+    path: '/w',
+    component: Frame,
+    children: [
+      {path: '', component: w},
+      {path: ':id', component: wl},
+      {path: 'c:id', component: wlc}
+    ]
   },
   // {
   //   path: '/user',

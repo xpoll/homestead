@@ -5,7 +5,7 @@
       <router-link :to="'/s'">1. 百度云真实链接解析</router-link>
       <a href="http://xn.blmdz.cn/xpoll/dy.html">2. dy2018谷歌自定义搜索</a>
       <router-link :to="'/draw'">3. 绘画</router-link>
-      <div>4. 杂志周刊</div>
+      <router-link :to="'/w'">4. 杂志周刊</router-link>
       <a href="http://xn.blmdz.cn">5. 虚拟主机目录</a>
       <a href="http://xpoll.blmdz.cn">6. 博客地址</a>
       <router-link :to="'/file'">测试. file</router-link>

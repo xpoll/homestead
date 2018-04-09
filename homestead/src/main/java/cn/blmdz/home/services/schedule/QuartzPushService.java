@@ -99,7 +99,7 @@ public class QuartzPushService {
                     weekly.setFsid(fileInfo.getFsId());
                     weekly.setStart(0);
                     weekly.setEnd(document.getNumberOfPages());
-                    weekly.setName(fileInfo.getName());
+                    weekly.setName(fileInfo.getName().split("\\.")[0]);
                     weeklyDao.create(weekly);
                     System.out.println("解析文件完成：" + fileInfo.getName());
                 } finally {

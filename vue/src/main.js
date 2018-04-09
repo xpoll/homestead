@@ -11,6 +11,8 @@ import util from './config/index'
 
 import axios from 'axios'
 
+import VuePreview from 'vue-preview'
+
 import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
 Vue.use(ElementUI)
@@ -21,6 +23,20 @@ Vue.use(ElementUI)
 // Vue.use(Button)
 // Vue.use(Alert)
 
+
+// Vue.use(VuePreview)
+
+// with parameters install
+Vue.use(VuePreview, {
+  mainClass: 'pswp--minimal--dark',
+  barsSize: {top: 0, bottom: 0},
+  captionEl: false,
+  fullscreenEl: false,
+  shareEl: false,
+  bgOpacity: 0.85,
+  tapToClose: true,
+  tapToToggleControls: false
+})
 
 axios.defaults.withCredentials=true
 

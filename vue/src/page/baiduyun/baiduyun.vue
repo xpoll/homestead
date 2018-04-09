@@ -49,57 +49,57 @@
 
       </el-form>
 
-    <el-table
-    v-if="tableData"
-    :data="tableData"
-    style="width: 100%">
-    <el-table-column
-      sortable
-      prop="fsId"
-      label="编号"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      sortable
-      prop="b"
-      label="标签"
-      width="100">
-      <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.dir ? 'primary' : 'success'"
-          close-transition>{{scope.row.dir ? '文件夹' : '文件'}}</el-tag>
-      </template>
-    </el-table-column>
-    <el-table-column
-      sortable
-      prop="name"
-      label="名称"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      sortable
-      prop="sizeShow"
-      label="大小"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      sortable
-      prop="path"
-      label="路径"
-      width="360">
-    </el-table-column>
-    <el-table-column
-      label="操作">
-      <template slot-scope="scope">
-        <el-button
-          v-if="!scope.row.dir"
-          size="mini"
-          type="danger"
-          class="cp"
-          :data-clipboard-text="scope.row.link">复制</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table
+      v-if="tableData"
+      :data="tableData"
+      style="width: 100%">
+        <el-table-column
+          sortable
+          prop="fsId"
+          label="编号"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="b"
+          label="标签"
+          width="100">
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.dir ? 'primary' : 'success'"
+              close-transition>{{scope.row.dir ? '文件夹' : '文件'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="name"
+          label="名称"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="sizeShow"
+          label="大小"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="path"
+          label="路径"
+          width="360">
+        </el-table-column>
+        <el-table-column
+          label="操作">
+          <template slot-scope="scope">
+            <el-button
+              v-if="!scope.row.dir"
+              size="mini"
+              type="danger"
+              class="cp"
+              :data-clipboard-text="scope.row.link">复制</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </section>
 
     <xpollFooter></xpollFooter>
