@@ -88,7 +88,7 @@ public class QuartzPushService {
                     //for (int i = 0; i < ((document.getNumberOfPages() > 5) ? 5 : document.getNumberOfPages()); i++) {
                     for (int i = 0; i < document.getNumberOfPages(); i++) {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        ImageIO.write(new PDFRenderer(document).renderImageWithDPI(i, 125, ImageType.RGB), "jpg", baos);
+                        ImageIO.write(new PDFRenderer(document).renderImageWithDPI(i, 200, ImageType.RGB), "jpg", baos);
                         String fileName = "fhzk/" + fileInfo.getFsId() + "-" + i + ".jpg";
                         System.out.println("上传图片开始：" + fileName);
                         fileServer.write(fileName, new ByteArrayInputStream(baos.toByteArray()));

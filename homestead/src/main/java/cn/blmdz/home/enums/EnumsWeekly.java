@@ -16,6 +16,7 @@ public enum EnumsWeekly {
     W_011(11, "读者"),
     W_012(12, "电脑报"),
     W_013(13, "IT经理世界"),
+    W_014(14, "财经天下"),
     ;
     
     private final int value;
