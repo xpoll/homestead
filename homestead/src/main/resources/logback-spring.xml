@@ -3,6 +3,36 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="org.springframework.web" level="INFO" />
     <logger name="org.reflections.Reflections" level="ERROR" />
-
-    <logger name="com.security" level="INFO"/>
 </configuration>
+<!-- 
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="logDir" value="./logs" />
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss SSS} %highlight(%-5level) %yellow(%thread) %highlight(%caller{1}) %date{yyyy-MM-dd HH:mm:ss SSS} %green(%-40.40logger{39})| %msg%n"/>
+    <property name="FILE_LOG_PATTERN" value="%date{yyyy-MM-dd HH:mm:ss SSS} %highlight(%-5level) %yellow(%thread) %highlight(%caller{1}) %date{yyyy-MM-dd HH:mm:ss SSS} %green(%-40.40logger{39})| %msg%n"/>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logDir}/appnext-%d{yyyyMMdd}-%i.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>412MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+         <appender-ref ref="stdout" />
+        <appender-ref ref="RollingFile" />
+    </root>
+</configuration>
+ -->
