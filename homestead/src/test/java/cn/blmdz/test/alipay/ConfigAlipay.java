@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.domain.AlipayMarketingCardOpenModel;
+import com.alipay.api.domain.AlipayMarketingCardTemplateModifyModel;
 import com.alipay.api.domain.AlipayMarketingCardUpdateModel;
 import com.alipay.api.domain.CardUserInfo;
 import com.alipay.api.domain.KoubeiMarketingCampaignActivityQueryModel;
@@ -58,7 +59,8 @@ public class ConfigAlipay {
 	public final static String name = "熙小浅";
 	public final static String color = "rgb(230,0,18)";
 	public final static String prefix = "qxx";
-	public final static String writeOffType = "barcode";
+    public final static String writeOffType = "barcode";
+//    public final static String writeOffType = "none";
     public final static String shops = "2017111500077000000046425247,2017111500077000000046464829";
 
 	public final static String sign = "qxx_alipay";
@@ -90,27 +92,27 @@ public class ConfigAlipay {
 //		AlipayMarketingCardActivateurlApplyResponse res = sdk.cardLink(ModelAlipay.alipayMarketingCardActivateurlApplyModel(template_id, url));
 //		System.out.println(URLDecoder.decode(res.getApplyCardUrl()));
 //		// 获取用户授权
-//		sdk.userToken("452145961bf44f3b8ea4483f93a1NF75");
+//		sdk.userToken("54059fe4707e4f16bb84ea7bf71fNX87");
 //		// 查询用户授权信息
-//		sdk.userInfo("composeB9d08833f23ac46c4ab1266d884505X75");
+		sdk.userInfo("composeB3cdc9875dacb4891808ab4d228dacB87");
 //		// 查询会员表单信息
 //		sdk.memberCardForm("20170829018940520502652207754", template_id, "composeBe959c6769403498bb069f9ce286e5X75", auth_token);
 		// 会员卡开卡
         Calendar max = Calendar.getInstance();
         AlipayMarketingCardOpenModel model = new AlipayMarketingCardOpenModel();
-        model.setOutSerialNo("20171113121212222000004");
+        model.setOutSerialNo("20171113121212222000006");
         model.setCardTemplateId(template_id);
         
         CardUserInfo cardUserInfo = new CardUserInfo();
         cardUserInfo.setUserUniIdType("UID");// 默认
-        cardUserInfo.setUserUniId("2088422857722001");
+        cardUserInfo.setUserUniId("2088702372638754");
         model.setCardUserInfo(cardUserInfo);
         MerchantCard cardExtInfo = new MerchantCard();
         cardExtInfo.setOpenDate(max.getTime());
         max.set(Calendar.YEAR, max.get(Calendar.YEAR) + 100);// 有效期默认100年
         
         cardExtInfo.setValidDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(max.getTime()));// 默认格式
-        cardExtInfo.setExternalCardNo("8944210004000001841");
+        cardExtInfo.setExternalCardNo("8821210004000206994");
         cardExtInfo.setLevel("VIP");
         cardExtInfo.setPoint("10000");
         cardExtInfo.setBalance("888");
@@ -118,12 +120,12 @@ public class ConfigAlipay {
         model.setCardExtInfo(cardExtInfo);
         
         MerchantMenber memberExtInfo = new MerchantMenber();
-        memberExtInfo.setName("陈");
+        memberExtInfo.setName("杨");
         memberExtInfo.setGende("MALE");// 默认格式
-        memberExtInfo.setCell("18222222222");
+        memberExtInfo.setCell("18224524752");
         model.setMemberExtInfo(memberExtInfo);
         
-//		sdk.memberCardOpen(model, "composeBce4321c0669445f7b2ae7bfa150bfX00");
+//		sdk.memberCardOpen(model, "composeBdffbfb36f840414492dd4809be132X75");
 		
 		AlipayMarketingCardUpdateModel um = new AlipayMarketingCardUpdateModel();
 		um.setTargetCardNo("qxx0000003575");

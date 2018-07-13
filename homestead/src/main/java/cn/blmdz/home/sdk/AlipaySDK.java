@@ -83,7 +83,7 @@ public class AlipaySDK {
 			throw new WebJspException(e.getCause());
 		}
 	}
-
+	
 	/**
 	 * 获取用户授权 alipay.system.oauth.token
 	 */
@@ -127,6 +127,7 @@ public class AlipaySDK {
 			throw new WebJspException(e.getCause());
 		}
 	}
+	
 
 	/**
 	 * 查询用户授权信息 alipay.user.info.share
