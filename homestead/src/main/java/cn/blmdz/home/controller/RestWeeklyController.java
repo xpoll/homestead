@@ -13,6 +13,7 @@ import cn.blmdz.home.base.BaseVo;
 import cn.blmdz.home.base.Response;
 import cn.blmdz.home.enums.EnumsWeekly;
 import cn.blmdz.home.model.Weekly;
+import cn.blmdz.home.services.schedule.QuartzPushService;
 import cn.blmdz.home.services.service.WeeklyService;
 
 @RestController
@@ -21,14 +22,29 @@ public class RestWeeklyController {
 
 	@Autowired
 	private WeeklyService weeklyService;
+	
+	@Autowired
+	private QuartzPushService quartzPushService;
 
-	/**
-	 * 类目
-	 */
-	@RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-	public Response<List<BaseVo<Integer, String>>> category() {
-		return Response.build(weeklyService.category());
-	}
+    /**
+     * 执行
+     */
+    @RequestMapping(value="/doing", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    public void start() {
+        try {
+            quartzPushService.doing();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 类目
+     */
+    @RequestMapping(value="", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+    public Response<List<BaseVo<Integer, String>>> category() {
+        return Response.build(weeklyService.category());
+    }
 	
 
 	/**

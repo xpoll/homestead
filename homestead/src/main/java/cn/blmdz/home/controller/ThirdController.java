@@ -130,14 +130,16 @@ public class ThirdController {
 	/**
 	 * 打印入参
 	 */
-	private void map(HttpServletRequest request) {
+	private Map<String, String> map(HttpServletRequest request) {
 		Map<String, String> requestMap = Maps.newHashMap();
 		Enumeration<String> enums = request.getParameterNames();
 		while (enums.hasMoreElements()) {
 			String param = enums.nextElement();
 			requestMap.put(param, request.getParameter(param));
 		}
-		log.info("接收参数: {}", JsonMapper.nonDefaultMapper().toJson(requestMap));
+		
+		log.info("{} 接收参数: {}", request.getServletPath(), JsonMapper.nonDefaultMapper().toJson(requestMap));
+		return requestMap;
 	}
 
 
@@ -147,6 +149,7 @@ public class ThirdController {
     @RequestMapping(value="/card")
     public void card(HttpServletRequest request, HttpServletResponse response) {
         map(request);
+        // channel 空指针处理 TODO
         ThirdManager thirdManager = channel(ThirdChannel.tran(request.getParameter("out_string")));
         thirdManager.card(request.getParameter("request_id"), request.getParameter("template_id"), request.getParameter("auth_code"));
         try {
@@ -161,7 +164,7 @@ public class ThirdController {
      */
     @RequestMapping(value="/test")
     @ResponseBody
-    public void test(HttpServletRequest request, HttpServletResponse response) {
-        map(request);
+    public Map<String, String> test(HttpServletRequest request, HttpServletResponse response) {
+        return map(request);
     }
 }

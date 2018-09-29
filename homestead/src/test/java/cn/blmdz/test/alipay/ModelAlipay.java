@@ -12,10 +12,12 @@ import com.alipay.api.domain.AlipayMarketingCardActivateurlApplyModel;
 import com.alipay.api.domain.AlipayMarketingCardTemplateCreateModel;
 import com.alipay.api.domain.AlipayMarketingCardTemplateModifyModel;
 import com.alipay.api.domain.MoreInfoDTO;
+import com.alipay.api.domain.PubChannelDTO;
 import com.alipay.api.domain.TemplateBenefitInfoDTO;
 import com.alipay.api.domain.TemplateCardLevelConfDTO;
 import com.alipay.api.domain.TemplateColumnInfoDTO;
 import com.alipay.api.domain.TemplateFieldRuleDTO;
+import com.alipay.api.domain.TemplateOpenCardConfDTO;
 import com.alipay.api.domain.TemplateStyleInfoDTO;
 
 import cn.blmdz.home.util.JsonMapper;
@@ -141,7 +143,10 @@ public class ModelAlipay {
 			String color,
 			String bg_id,
 			String sign,
-			String url
+			String url,
+            String shops,
+            Boolean shop,
+            String app_id
 			) {
 		AlipayMarketingCardTemplateModifyModel model = new AlipayMarketingCardTemplateModifyModel();
 		model.setRequestId(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
@@ -163,11 +168,9 @@ public class ModelAlipay {
         
         List<TemplateBenefitInfoDTO> benefitInfoList = new ArrayList<>();
         TemplateBenefitInfoDTO templateBenefitInfoDTO = new TemplateBenefitInfoDTO();
-        templateBenefitInfoDTO.setTitle("优惠啊");
+        templateBenefitInfoDTO.setTitle("优惠");
         List<String> benefitDesc = new ArrayList<>();
-        benefitDesc.add("优惠啊1");
-        benefitDesc.add("优惠啊优惠啊2");
-        benefitDesc.add("优惠啊优惠啊优惠啊3");
+        benefitDesc.add("凭会员卡可享受9折优惠。");
         templateBenefitInfoDTO.setBenefitDesc(benefitDesc);
         Calendar max = Calendar.getInstance();
         templateBenefitInfoDTO.setStartDate(max.getTime());
@@ -282,25 +285,26 @@ public class ModelAlipay {
         cardLevelConf.add(templateCardLevelConfDTO);
 		model.setCardLevelConf(cardLevelConf);
 		
-//        if (shop) {
-//            List<String> shopIds = new ArrayList<>();
-//            for (int i = 0; i < shops.split(",").length; i++) {
-//                shopIds.add(shops.split(",")[i].trim());
-//            }
-//            model.setShopIds(shopIds);
-//            
-//            List<PubChannelDTO> pubChannels = new ArrayList<>();
-//            PubChannelDTO pubChannelDTO = new PubChannelDTO();
-//            pubChannelDTO.setPubChannel("SHOP_DETAIL");
-//            pubChannels.add(pubChannelDTO);
-//            model.setPubChannels(pubChannels);
-//            
-//            TemplateOpenCardConfDTO templateOpenCardConfDTO = new TemplateOpenCardConfDTO();
-//            templateOpenCardConfDTO.setOpenCardSourceType("MER");
-//            templateOpenCardConfDTO.setSourceAppId(my_app_id);
-//            templateOpenCardConfDTO.setOpenCardUrl(领卡链接);
-//            model.setOpenCardConf(templateOpenCardConfDTO);
-//        }
+        if (shop) {
+            List<String> shopIds = new ArrayList<>();
+            for (int i = 0; i < shops.split(",").length; i++) {
+                shopIds.add(shops.split(",")[i].trim());
+            }
+            model.setShopIds(shopIds);
+            
+            List<PubChannelDTO> pubChannels = new ArrayList<>();
+            PubChannelDTO pubChannelDTO = new PubChannelDTO();
+            pubChannelDTO.setPubChannel("SHOP_DETAIL");
+            pubChannels.add(pubChannelDTO);
+            model.setPubChannels(pubChannels);
+            
+            TemplateOpenCardConfDTO templateOpenCardConfDTO = new TemplateOpenCardConfDTO();
+            templateOpenCardConfDTO.setOpenCardSourceType("MER");
+            templateOpenCardConfDTO.setSourceAppId(app_id);
+            String shop_url = "https://memberprod.alipay.com/account/openform/activecard.htm?app_id=" + app_id + "&template_id=" + templateId + "&__webview_options__=canPullDown%3dNO%26transparentTitle%3dauto&out_string=alipay&callback=" + url + "/third/card";
+            templateOpenCardConfDTO.setOpenCardUrl(shop_url);
+            model.setOpenCardConf(templateOpenCardConfDTO);
+        }
 		
 		return model;
 	}
@@ -347,33 +351,4 @@ public class ModelAlipay {
 		return model;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

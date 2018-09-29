@@ -17,6 +17,7 @@ import com.alipay.api.domain.AlipayMarketingCardTemplateCreateModel;
 import com.alipay.api.domain.AlipayMarketingCardTemplateModifyModel;
 import com.alipay.api.domain.AlipayMarketingCardTemplateQueryModel;
 import com.alipay.api.domain.AlipayMarketingCardUpdateModel;
+import com.alipay.api.domain.KoubeiMarketingCampaignActivityQueryModel;
 import com.alipay.api.request.AlipayMarketingCardActivateformQueryRequest;
 import com.alipay.api.request.AlipayMarketingCardActivateurlApplyRequest;
 import com.alipay.api.request.AlipayMarketingCardConsumeSyncRequest;
@@ -31,6 +32,7 @@ import com.alipay.api.request.AlipayMarketingCardUpdateRequest;
 import com.alipay.api.request.AlipayOfflineMaterialImageUploadRequest;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.request.AlipayUserInfoShareRequest;
+import com.alipay.api.request.KoubeiMarketingCampaignActivityQueryRequest;
 import com.alipay.api.response.AlipayMarketingCardActivateformQueryResponse;
 import com.alipay.api.response.AlipayMarketingCardActivateurlApplyResponse;
 import com.alipay.api.response.AlipayMarketingCardConsumeSyncResponse;
@@ -45,6 +47,7 @@ import com.alipay.api.response.AlipayMarketingCardUpdateResponse;
 import com.alipay.api.response.AlipayOfflineMaterialImageUploadResponse;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.alipay.api.response.AlipayUserInfoShareResponse;
+import com.alipay.api.response.KoubeiMarketingCampaignActivityQueryResponse;
 
 import cn.blmdz.home.exception.WebJspException;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +83,7 @@ public class AlipaySDK {
 			throw new WebJspException(e.getCause());
 		}
 	}
-
+	
 	/**
 	 * 获取用户授权 alipay.system.oauth.token
 	 */
@@ -124,6 +127,7 @@ public class AlipaySDK {
 			throw new WebJspException(e.getCause());
 		}
 	}
+	
 
 	/**
 	 * 查询用户授权信息 alipay.user.info.share
@@ -471,5 +475,35 @@ public class AlipaySDK {
         } catch (AlipayApiException e) {
             throw new WebJspException(e.getCause());
         }
+    }
+    
+    /**
+     * 活动详情查询 koubei.marketing.campaign.activity.query
+     * 
+     * @api <a href=
+     *      "https://docs.open.alipay.com/api_5/koubei.marketing.campaign.activity.query/">
+     *      活动详情查询</a>
+     *      
+     *      https://e.alipay.com/main.htm#/marketing-activity/buygive/create?_k=08ni45
+     *      
+     */
+    public KoubeiMarketingCampaignActivityQueryResponse activityQuery(KoubeiMarketingCampaignActivityQueryModel model) {
+        
+        log.info("-----------------活动详情查询-------------------");
+        try {
+            KoubeiMarketingCampaignActivityQueryRequest request = new KoubeiMarketingCampaignActivityQueryRequest();
+            request.setBizModel(model);
+            KoubeiMarketingCampaignActivityQueryResponse response = client.execute(request, null, null);
+            log.info(response.getBody());
+            if (response.isSuccess()) {
+                log.info("success.");
+            } else {
+                log.error("error.");
+            }
+            return response;
+        } catch (AlipayApiException e) {
+            throw new WebJspException(e.getCause());
+        }
+    
     }
 }
