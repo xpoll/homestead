@@ -105,7 +105,7 @@ public class CalculateUtil {
         citys.add("黑龙江");// 黑
         citys.add("上海");// 沪
         citys.add("江苏");// 苏
-        citys.add("浙江省");// 浙
+        citys.add("浙江");// 浙
         citys.add("安徽");// 皖
         citys.add("福建");// 闽
         citys.add("江西");// 赣
@@ -116,19 +116,19 @@ public class CalculateUtil {
         citys.add("广东");// 粤
         citys.add("广西");// 桂
         citys.add("海南");// 琼
-        citys.add("重庆");// 渝
         citys.add("四川");// 川
         citys.add("贵州");// 黔
         citys.add("云南");// 滇
+        citys.add("重庆");// 渝
         citys.add("西藏");// 藏
         citys.add("陕西");// 陕
-        citys.add("甘肃省");// 甘
+        citys.add("甘肃");// 甘
         citys.add("青海");// 青
         citys.add("宁夏");// 宁
         citys.add("新疆");// 新
-        citys.add("台湾");// 台
-        citys.add("香港特别行政区");// 港
+        citys.add("香港");// 港
         citys.add("澳门");// 澳
+        citys.add("台湾");// 台
         return citys;
     }
 }

@@ -50,8 +50,8 @@ public class BaiduYunEncryption {
     public static String list = "https://pan.baidu.com/share/list";
 //    public static String key = "dEWWnYD";
 //    public static String pwd = "cfhk";
-  public static String key = "https://pan.baidu.com/s/1eulODVBrO6KVnwv9e6LKtg";
-  public static String pwd = "5snx";
+  public static String key = "https://pan.baidu.com/s/1YYrBBLmVtg_a5KtgJUNcBg";
+  public static String pwd = "eu27";
 
     static {
         cookieStore = new BasicCookieStore();
