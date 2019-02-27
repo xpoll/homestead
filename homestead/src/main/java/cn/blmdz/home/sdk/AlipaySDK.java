@@ -7,6 +7,7 @@ import java.util.Date;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.FileItem;
+import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
 import com.alipay.api.domain.AlipayMarketingCardActivateformQueryModel;
 import com.alipay.api.domain.AlipayMarketingCardActivateurlApplyModel;
 import com.alipay.api.domain.AlipayMarketingCardConsumeSyncModel;
@@ -17,7 +18,7 @@ import com.alipay.api.domain.AlipayMarketingCardTemplateCreateModel;
 import com.alipay.api.domain.AlipayMarketingCardTemplateModifyModel;
 import com.alipay.api.domain.AlipayMarketingCardTemplateQueryModel;
 import com.alipay.api.domain.AlipayMarketingCardUpdateModel;
-import com.alipay.api.domain.KoubeiMarketingCampaignActivityQueryModel;
+import com.alipay.api.request.AlipayFundTransToaccountTransferRequest;
 import com.alipay.api.request.AlipayMarketingCardActivateformQueryRequest;
 import com.alipay.api.request.AlipayMarketingCardActivateurlApplyRequest;
 import com.alipay.api.request.AlipayMarketingCardConsumeSyncRequest;
@@ -32,7 +33,7 @@ import com.alipay.api.request.AlipayMarketingCardUpdateRequest;
 import com.alipay.api.request.AlipayOfflineMaterialImageUploadRequest;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.request.AlipayUserInfoShareRequest;
-import com.alipay.api.request.KoubeiMarketingCampaignActivityQueryRequest;
+import com.alipay.api.response.AlipayFundTransToaccountTransferResponse;
 import com.alipay.api.response.AlipayMarketingCardActivateformQueryResponse;
 import com.alipay.api.response.AlipayMarketingCardActivateurlApplyResponse;
 import com.alipay.api.response.AlipayMarketingCardConsumeSyncResponse;
@@ -47,7 +48,6 @@ import com.alipay.api.response.AlipayMarketingCardUpdateResponse;
 import com.alipay.api.response.AlipayOfflineMaterialImageUploadResponse;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.alipay.api.response.AlipayUserInfoShareResponse;
-import com.alipay.api.response.KoubeiMarketingCampaignActivityQueryResponse;
 
 import cn.blmdz.home.exception.WebJspException;
 import lombok.extern.slf4j.Slf4j;
@@ -477,23 +477,13 @@ public class AlipaySDK {
         }
     }
     
-    /**
-     * 活动详情查询 koubei.marketing.campaign.activity.query
-     * 
-     * @api <a href=
-     *      "https://docs.open.alipay.com/api_5/koubei.marketing.campaign.activity.query/">
-     *      活动详情查询</a>
-     *      
-     *      https://e.alipay.com/main.htm#/marketing-activity/buygive/create?_k=08ni45
-     *      
-     */
-    public KoubeiMarketingCampaignActivityQueryResponse activityQuery(KoubeiMarketingCampaignActivityQueryModel model) {
+    public AlipayFundTransToaccountTransferResponse fundTransToaccountTransfer(AlipayFundTransToaccountTransferModel model) {
         
-        log.info("-----------------活动详情查询-------------------");
+        log.info("-----------------单笔转账到支付宝账户接口-------------------");
         try {
-            KoubeiMarketingCampaignActivityQueryRequest request = new KoubeiMarketingCampaignActivityQueryRequest();
+            AlipayFundTransToaccountTransferRequest request = new AlipayFundTransToaccountTransferRequest();
             request.setBizModel(model);
-            KoubeiMarketingCampaignActivityQueryResponse response = client.execute(request, null, null);
+            AlipayFundTransToaccountTransferResponse response = client.execute(request, null, null);
             log.info(response.getBody());
             if (response.isSuccess()) {
                 log.info("success.");

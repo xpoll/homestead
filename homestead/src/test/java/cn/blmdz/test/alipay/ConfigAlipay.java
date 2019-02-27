@@ -17,11 +17,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.domain.AlipayFundTransToaccountTransferModel;
 import com.alipay.api.domain.AlipayMarketingCardOpenModel;
-import com.alipay.api.domain.AlipayMarketingCardTemplateModifyModel;
 import com.alipay.api.domain.AlipayMarketingCardUpdateModel;
 import com.alipay.api.domain.CardUserInfo;
-import com.alipay.api.domain.KoubeiMarketingCampaignActivityQueryModel;
 import com.alipay.api.domain.McardNotifyMessage;
 import com.alipay.api.domain.MerchantCard;
 import com.alipay.api.domain.MerchantMenber;
@@ -94,7 +93,7 @@ public class ConfigAlipay {
 //		// 获取用户授权
 //		sdk.userToken("54059fe4707e4f16bb84ea7bf71fNX87");
 //		// 查询用户授权信息
-		sdk.userInfo("composeB3cdc9875dacb4891808ab4d228dacB87");
+//		sdk.userInfo("composeB3cdc9875dacb4891808ab4d228dacB87");
 //		// 查询会员表单信息
 //		sdk.memberCardForm("20170829018940520502652207754", template_id, "composeBe959c6769403498bb069f9ce286e5X75", auth_token);
 		// 会员卡开卡
@@ -157,9 +156,17 @@ public class ConfigAlipay {
 //		// 会员卡删除
 //		sdk.memberCardDelete("family0003366523");
 		
-        KoubeiMarketingCampaignActivityQueryModel model1 = new KoubeiMarketingCampaignActivityQueryModel();
-        model1.setCampId("20180625000000002849662000151755");
         
-//        sdk.activityQuery(model1);
+        AlipayFundTransToaccountTransferModel alipayFundTransToaccountTransferModel = new AlipayFundTransToaccountTransferModel();
+        alipayFundTransToaccountTransferModel.setOutBizNo(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
+        alipayFundTransToaccountTransferModel.setPayeeType("ALIPAY_USERID");
+        alipayFundTransToaccountTransferModel.setPayeeAccount("2088702372638754");
+        alipayFundTransToaccountTransferModel.setPayeeRealName("杨永宗");
+        alipayFundTransToaccountTransferModel.setAmount("0.1");
+        alipayFundTransToaccountTransferModel.setPayerShowName("杨大仙");
+        alipayFundTransToaccountTransferModel.setPayerRealName("杨永宗");
+        alipayFundTransToaccountTransferModel.setRemark("我在测试哦");
+        
+        sdk.fundTransToaccountTransfer(alipayFundTransToaccountTransferModel);
 	}
 }

@@ -22,6 +22,7 @@ App({
           var code = res.code
           wx.getUserInfo({
             success: function (res) {
+              console.info(res)
               var iv = res.iv
               var encryptedData = res.encryptedData
               wx.request({
@@ -50,9 +51,9 @@ App({
   },
   globalData:{
     user: null,
-    // wsDomain: 'ws://127.0.0.1:8082',
-    // httpDomain: 'http://127.0.0.1:8082'
-    wsDomain: 'wss://blmdz.cn',
-    httpDomain: 'https://blmdz.cn'
+    wsDomain: 'ws://127.0.0.1:8082',
+    httpDomain: 'http://127.0.0.1:8082'
+    // wsDomain: 'wss://blmdz.cn',
+    // httpDomain: 'https://blmdz.cn'
   }
 })

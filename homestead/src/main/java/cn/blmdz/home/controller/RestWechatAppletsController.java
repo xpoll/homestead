@@ -68,6 +68,7 @@ public class RestWechatAppletsController {
             String body = reqSession.body();
             log.debug("jscode2session info. info: {}", body);
             WechatAppletSessionKeyResponse sessionResponse = JsonMapper.nonEmptyMapper().fromJson(body, WechatAppletSessionKeyResponse.class);
+            log.info("openId: {}", sessionResponse.getOpenid());
             user = decryptToUser(sessionResponse.getSession_key(), iv, encryptedData);
             if (user == null) return Response.build(null);
             
